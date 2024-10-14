@@ -9,6 +9,7 @@ const BasketHeader = ({ basketData }) => {
   return (
     <Flex
     textAlign={"left"}
+    border={"2px solid red"}
       width="100%"
       p={2}
       height="43px"
@@ -39,12 +40,13 @@ const BasketHeader = ({ basketData }) => {
       />
       <Badge
        fontFamily={"Epilogue"}
+     
         fontSize="11px"
         backgroundColor="rgba(29, 215, 91, 1)"
         color="rgba(10, 77, 32, 1)"
         borderRadius="full"
         paddingX={2}
-        marginTop={3}
+        // marginTop={3}
         marginRight={2}
       >
         {basketData.month}
