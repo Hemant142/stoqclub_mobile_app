@@ -1,0 +1,349 @@
+import React, { useEffect, useState } from "react";
+import {
+  useToast,
+  Box,
+  Button,
+  Input,
+  Text,
+  VStack,
+  HStack,
+  Flex,
+  Icon,
+} from "@chakra-ui/react";
+import moment from "moment";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useNavigate, useParams } from "react-router-dom";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+
+
+const InvestmentSection = (props) => {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const minReqAmt = parseInt(props.minReq);
+  const currentBalance = parseInt(props.currentBalance); 
+  // const instrumentList=  parseInt(props.instrumentList);
+  const { id } = useParams();
+  const [showInvestmentOptions, setShowInvestmentOptions] = useState(false);
+  const [amountToInvest, setAmountToInvest] = useState(minReqAmt);
+  const [lots, setLots] = useState(1); // Initial lot size as 1
+  const [apiLoader, setApiLoader] = useState(false);
+console.log(currentBalance,"currentBalance")
+// 
+
+  const handleInvestClick = () => {
+    setShowInvestmentOptions(true);
+    setAmountToInvest(minReqAmt); // Reset amount to minimum requirement
+  };
+
+  
+  const handleSuccessfulTransaction = (amt) => {
+    toast({
+      title: "Invested successfully",
+      description: (
+        <Box>
+          <Text>{moment().format("ddd MMM DD")}</Text>
+          <Text>{props.basketName}</Text>
+          <Text>Amount: ₹{amt}</Text>
+        </Box>
+      ),
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+      position: "top-center",
+    });
+  };
+
+  const handleFailedTransaction = (msg) => {
+    toast({
+      title: "Transaction Failed",
+      description: msg,
+      status: "error",
+      duration: 4000,
+      isClosable: true,
+      position: "top-center",
+    });
+  };
+
+  const handleInsufficientBalance = (msg) => {
+    toast({
+      title: "Insufficient Balance",
+      description: msg,
+      status: "warning",
+      duration: 3000,
+      isClosable: true,
+      position: "top-center",
+    });
+  };
+
+  const handleInvalidAmount = (msg, amt) => {
+    toast({
+      title: "Invalid Amount",
+      description: `${msg} ${amt}`,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top-center",
+    });
+  };
+
+  const increaseLot = () => {
+    const newLots = lots + 1;
+    const newAmount = minReqAmt * newLots ;
+
+    if (newAmount <= currentBalance) {
+      setLots(newLots);
+      setAmountToInvest(newAmount);
+    } else {
+      handleInsufficientBalance("Cannot exceed current balance.");
+    }
+  };
+
+  const decreaseLot = () => {
+    if (lots > 1) {
+      const newLots = lots - 1;
+      const newAmount = (minReqAmt/newLots) ;
+      setLots(newLots);
+      setAmountToInvest(newAmount);
+    } else {
+      handleInvalidAmount("Cannot have less than one lot.", minReqAmt);
+    }
+  };
+
+  const handleBuyClick = () => {
+    if (amountToInvest < minReqAmt) {
+      handleInvalidAmount(
+        "Invalid Amount, please check min amount, you have entered ₹",
+        amountToInvest
+      );
+      return false;
+    } else if (amountToInvest > currentBalance) {
+      handleInvalidAmount(
+        "Insufficient Balance, you have entered ₹",
+        amountToInvest
+      );
+      return false;
+    } 
+    else {
+        // Pass lot and amount to the Confirm Order page
+        navigate("/confirm-order", {
+          state: {
+            lots: lots,
+            currentBalance:currentBalance,
+            amountToInvest: amountToInvest,
+            basketId:props.id,
+            basketName: props.basketName, // In case you want to pass the basket name too
+            instrumentList:props.instrumentList
+          },
+        });
+      }
+    // else {
+    //   const userId = localStorage.getItem("userId");
+    //   let config = {
+    //     method: "post",
+    //     maxBodyLength: Infinity,
+    //     url: `https://centrum-app-api.vercel.app/api/centrum/STOQCLUB/add-clients/v2?user_id=${userId}&basket_id=${id}&investment_amount=${amountToInvest}`,
+    //     headers: {},
+    //   };
+    //   setApiLoader(true);
+    //   axios
+    //     .request(config)
+    //     .then((response) => {
+    //       setApiLoader(false);
+    //       if (response.data.status === "SUCCESS") {
+    //         handleSuccessfulTransaction(amountToInvest);
+    //       } else {
+    //         handleInsufficientBalance(response.data.data);
+    //       }
+    //     })
+    //     .catch(() => {
+    //       setApiLoader(false);
+    //       handleFailedTransaction("Transaction could not be completed.");
+    //     });
+    // }
+  };
+
+
+  return (
+    <Box
+      className="investment-section"
+      p={5}
+      // borderWidth="1px"
+      // borderRadius="lg"
+      // boxShadow="lg"
+    >
+      {!showInvestmentOptions && (
+        <Flex justifyContent={"space-between"} alignItems={"center"}>
+         <Text 
+  fontFamily="Inter" 
+  fontSize="14px" 
+  fontWeight="normal" 
+  lineHeight="22px" 
+  textAlign="left"
+>
+  Invest for your future
+</Text>
+
+          <Button 
+              color={"#1DD75B"}
+              border={"1px solid #1DD75B"}
+            variant="outline"
+            _hover={{
+              boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+              transform: "scale(1.05)",
+            }}
+            _active={{
+              boxShadow: "0 0 15px #1DD75B",
+              transform: "scale(0.95)",
+            }}onClick={handleInvestClick}>
+            Invest Now
+          </Button>
+        </Flex>
+      )}
+      {showInvestmentOptions && (
+        <>
+          <Text
+            fontSize="lg"
+            fontFamily="Inter"
+            fontWeight="400"
+            lineHeight="22px"
+            textAlign="left"
+          >
+            Basket Minimum Amount: ₹{minReqAmt}
+          </Text>
+          {/* <Box display={"flex"} justifyContent={"space-between"}>
+          <Text fontSize="lg" mt={4}>
+             Amount: <strong>₹{amountToInvest}</strong>
+          </Text>
+          <Text fontSize="lg">
+            Current Balance: <strong>₹{currentBalance}</strong>
+          </Text>
+         
+          </Box> */}
+
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Text
+              fontSize="14px"
+              fontFamily="Inter"
+              fontWeight="400"
+              lineHeight="22px"
+              textAlign="left"
+              color="#FFFFFF"
+              mt={4}
+            >
+              Amount: <strong>₹{amountToInvest}</strong>
+            </Text>
+            <Text
+              fontSize="14px"
+              fontFamily="Inter"
+              fontWeight="400"
+              lineHeight="22px"
+              textAlign="left"
+              color="#FFFFFF"
+              mt={4}
+            >
+              Current Balance: <strong>₹{currentBalance}</strong>
+            </Text>
+            <Text fontSize="lg"></Text>
+          </Box>
+
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box>
+              <HStack spacing={4} mt={4}>
+                <Button
+                  colorScheme="white"
+                  variant="outline"
+                  _hover={{
+                    boxShadow: "0 0 10px white",
+                    transform: "scale(1.05)",
+                  }}
+                    size='md'
+                  _active={{
+                    boxShadow: "0 0 15px white",
+                    transform: "scale(0.95)",
+                  }}
+                  onClick={decreaseLot}
+                  disabled={lots <= 1}
+                >
+                <Icon as={MinusIcon} />
+                </Button>
+                <Input
+                  value={lots}
+                  readOnly
+                  textAlign="center"
+                  width="50px"
+                  //   bg="white"
+                  fontWeight="bold"
+                />
+                <Button
+                   size='md'
+                 color={"#1DD75B"}
+                 border={"1px solid #1DD75B"}
+                 _hover={{
+                  boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+                  transform: "scale(1.05)",
+                }}
+                _active={{
+                  boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
+                  transform: "scale(0.95)",
+                }}
+                  variant="outline"
+                  onClick={increaseLot}
+                  disabled={amountToInvest >= currentBalance}
+                >
+                  <Icon as={AddIcon}/>
+                  
+                </Button>
+              </HStack>
+              <Text
+                fontSize="14px"
+                fontFamily="Inter"
+                fontWeight="400"
+                lineHeight="22px"
+                textAlign="left"
+                color="#FFFFFF"
+                mt={4}
+              >
+                Basket Multiple
+              </Text>
+            </Box>
+            <Box mt={4}>
+              {/* <Button
+                colorScheme="green"
+                variant="outline"
+                onClick={handleBuyClick}
+                isLoading={apiLoader}
+              >
+                Invest
+              </Button> */}
+
+<Button
+  color={"#1DD75B"}
+  size="lg"
+  height="60px"  // Increase button height
+  width="160px"   // Increase button width
+  border={"1px solid #1DD75B"}
+  variant="outline"
+  _hover={{
+    boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+    transform: "scale(1.05)",
+  }}
+  _active={{
+    boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
+    transform: "scale(0.95)",
+  }}
+  onClick={handleBuyClick}
+  isLoading={apiLoader}
+>
+  Invest
+</Button>
+
+            </Box>
+          </Box>
+        </>
+      )}
+    </Box>
+  );
+};
+
+export default InvestmentSection;
