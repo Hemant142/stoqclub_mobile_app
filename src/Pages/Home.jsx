@@ -67,7 +67,7 @@ export default function Home() {
       if(userDetails.balance!==undefined){
         Cookies.set('balance', userDetails.balance)
       }else{
-        Cookies.set('balance', 10000)
+        Cookies.set('balance', 100000)
       }
      
 

@@ -27,7 +27,7 @@ export default function BasketDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
   console.log(id, "ID");
-  let userId = Cookies.get("user2Id_client");
+  let userId = Cookies.get("userId");
   let currentBalance=Cookies.get("balance")
 console.log(currentBalance,"currentBalance")
 
