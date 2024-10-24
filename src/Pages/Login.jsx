@@ -65,11 +65,11 @@ const Login = () => {
         userId: userId,
         panCard: panCard,
       };
-      console.log(data,"DAta")
+    
       // Dispatch action and handle the promise
       dispatch(clientToken(data))
         .then((res) => {
-          console.log(res, "Response Login");
+         
      Cookies.set('userId',userId)
             // setIsOTPDrawerOpen(true); // Open OTP drawer if login is successful
             if(res.data.status==="failed"){
@@ -97,7 +97,6 @@ const Login = () => {
             dispatch(otpSend(token))
                 .then((otpResponse) => {
                 
-                  console.log(otpResponse, "otpResponse");
                   toast({
                     title: "OTP sent to your registered email!",
                     position: "bottom",

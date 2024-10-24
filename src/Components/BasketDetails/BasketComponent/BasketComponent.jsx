@@ -11,8 +11,10 @@ const BasketComponent = ({ basketData }) => {
         <Box
         //  paddingLeft={2}
         //  paddingRight={2}
-         p={2}
-        //  border={"1px solid red"}
+         pl={4}
+         pr={4}
+         pb={4}
+       
          marginLeft="20px"
          borderRadius="10px"
 

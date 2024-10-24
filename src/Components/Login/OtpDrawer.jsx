@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import Cookies from "js-cookie";
-import { otpSend, otpVarificationClient } from "../../Redux/authReducer/action";
+import { getBalanceToken, otpSend, otpVarificationClient } from "../../Redux/authReducer/action";
 import { useDispatch } from "react-redux";
 
 const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken }) => {
@@ -37,8 +37,18 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
 
   const basicAuth = "Basic " + btoa("A1" + ":" + "thisisadmin");
 
+
+  const handleOtpComplete = (value) => {
+    setOtp(value);
+   
+    if (value.length === 4) {
+      handleOtpVerify(value); // Pass 'value' instead of 'otp'
+    }
+  };
+
+
   // Handle OTP submission
-  const handleSubmitOTP = async () => {
+  const handleOtpVerify = async (otp) => {
     if (!otp || otp.length < 4) {
       toast({
         title: "Please enter a valid OTP",
@@ -61,6 +71,8 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
         Cookies.set("userId_client", centrumId);
         Cookies.set("username_client", username);
         Cookies.set("login_token_stoqclub", basicAuth);
+
+      
 
         toast({
           title: "OTP verified successfully!",
@@ -146,7 +158,7 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
             <HStack spacing={4} justify="center">
               <PinInput
                 value={otp}
-                onChange={setOtp}
+                onChange={handleOtpComplete}
                 size="lg"
                 focusBorderColor="blue.500"
               >
@@ -190,7 +202,7 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
               boxShadow: "0 0 15px #1DD75B",
               transform: "scale(0.95)",
             }}
-            onClick={handleSubmitOTP}
+            onClick={handleOtpVerify}
             isDisabled={timer === 0 || isSubmitting}
             isLoading={isSubmitting}
             rightIcon={<CheckIcon />}

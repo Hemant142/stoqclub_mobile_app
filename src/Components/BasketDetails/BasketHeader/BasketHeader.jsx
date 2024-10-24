@@ -11,6 +11,7 @@ const BasketHeader = ({ basketData }) => {
     textAlign={"left"}
     border={"2px solid red"}
       width="100%"
+      mt={2}
       p={2}
       height="43px"
       alignItems="center"
@@ -19,7 +20,8 @@ const BasketHeader = ({ basketData }) => {
       borderColor="rgba(184, 245, 205, 1)"
       borderRadius="8px"
       boxShadow="0px 0px 2px rgba(23, 26, 31, 0.12)"
-      fontFamily={"Epilogue"}
+      // fontFamily={"Epilogue"}
+      fontFamily={"Arial, Helvetica, sans-serif"}
     //   fontWeight={"normal"}
     >
       <Heading
@@ -46,10 +48,12 @@ const BasketHeader = ({ basketData }) => {
         color="rgba(10, 77, 32, 1)"
         borderRadius="full"
         paddingX={2}
-        // marginTop={3}
+        textAlign={"center"}
+        paddingTop={1}
         marginRight={2}
       >
-        {basketData.month}
+        {/* {basketData.month} */}
+        sep
       </Badge>
     </Flex>
   );

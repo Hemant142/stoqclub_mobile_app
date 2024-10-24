@@ -14,7 +14,7 @@ export default function AllRoutes() {
             <Route path='/' element={<Login/>} />
             <Route path='/basket/:id' element={<BasketDetails/>} />
             <Route path='/disclosure/:id' element={<Disclosure/>}/>
-            <Route path='/confirm-order' element={<ConfirmOrder/>} />
+            <Route path='/confirm-order/:id' element={<ConfirmOrder/>} />
             <Route path='/home' element={<Home/>}/>
             <Route path='*' element={<NotFound/>}/>
         </Routes>

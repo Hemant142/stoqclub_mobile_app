@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Text,
@@ -27,6 +27,12 @@ import Cookies from "js-cookie";
 import { FaCircleCheck, FaStar } from "react-icons/fa6";
 import { CiCircleCheck } from "react-icons/ci";
 import CustomToast from "../Components/ConfirmOrder/CustomToast";
+import { getBalance } from "../Redux/authReducer/action";
+import {
+  getBasketDetails,
+  getOrderHistory,
+  OrderPlaced,
+} from "../Redux/basketReducer/action";
 
 const ConfirmOrder = () => {
   const location = useLocation();
@@ -38,24 +44,76 @@ const ConfirmOrder = () => {
   const toast = useToast();
   const [tempRating,setTempRating] =useState(0)
   const [rating, setRating] = useState(null);
-  const [basketData, setBasketData] = useState(null);
+  const [amountToInvest,setAmountToInvest]=useState(0)
+  const [timeLeft, setTimeLeft] = useState(300); 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMarketOpen,setisMarketOpen]=useState(false)
   let userName = Cookies.get("user-name");
+  const { id } = useParams();
+  const token = Cookies.get("login_token_client");
+  const userId=Cookies.get("userId_client");
+  const [bufferAmount,setBufferAmount]=useState(0)
+const lots=Number(Cookies.get('lots'))
 
+  const currentBalance = useSelector((store) => store.authReducer.userBalance);
+  const {isLoading,newInstrumentsData,basketData}=useSelector((store) => store.basketReducer);
 
- 
 
   useEffect(() => {
-      // Retrieve the data from the cookie
-      const dataFromCookie = Cookies.get('basketData');
+    dispatch(getBasketDetails(id, token));
+    dispatch(getBalance(token));
+  }, [token]);
 
-      if (dataFromCookie) {
-          // Parse the string back to a JSON object
-          setBasketData(JSON.parse(dataFromCookie));
+  useEffect(() => {
+    const checkTimeAndDate = () => {
+      const now = new Date();
+  
+      // Get the current UTC time
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+  
+      // Convert UTC time to Indian Standard Time (IST) by adding 5 hours 30 minutes
+      const istHours = utcHours + 5;
+      const istMinutes = utcMinutes + 30;
+  
+      // Adjust for overflow if minutes exceed 60
+      let currentISTHours = istHours;
+      let currentISTMinutes = istMinutes;
+      if (istMinutes >= 60) {
+        currentISTHours += 1;
+        currentISTMinutes = istMinutes - 60;
       }
-  }, []); // This effect will run only once when the component mounts
+  
+      // Adjust for overflow if hours exceed 24 (next day)
+      if (currentISTHours >= 24) {
+        currentISTHours = currentISTHours - 24;
+      }
+  
+      // Convert the time to minutes from midnight (IST)
+      const currentTimeInMinutes = currentISTHours * 60 + currentISTMinutes;
+  
+      const marketOpenTime = 9 * 60 + 15; // 9:15 AM IST in minutes
+      const marketCloseTime = 15 * 60 + 20; // 3:20 PM IST in minutes
+  
+      // Get the current day in IST (0 = Sunday, 6 = Saturday)
+      const istDay = (now.getUTCDay() + 5 / 24 + 30 / 1440) % 7; // Adjust for IST day offset
+  
+      // Check if it's a weekday (Monday to Friday)
+      if (istDay >= 1 && istDay <= 5) {
+        // Check if the current time is between market open and close times in IST
+        if (currentTimeInMinutes >= marketOpenTime && currentTimeInMinutes <= marketCloseTime) {
+          setisMarketOpen(true);  // Market is open
+        } else {
+          setisMarketOpen(false);  // Market is closed
+        }
+      } else {
+        setisMarketOpen(false);  // It's a weekend
+      }
+    };
+  
+    checkTimeAndDate();
+  }, []);
 
-  console.log(basketData, "basketData InvestmentSection");
 
   useEffect(() => {
     setBrokerage(345);
@@ -63,336 +121,111 @@ const ConfirmOrder = () => {
   }, []);
 
   const toTitleCase = (str) => {
+    // Check if the input is a valid string, return empty string or handle accordingly
+    if (!str || typeof str !== 'string') {
+      return ""; // Return empty string or handle the undefined case as needed
+    }
     return str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
   };
+  
 
-  // Apply the function to your basketName
-  const {
-    lots,
-    amountToInvest,
-    basketId,
-    currentBalance,
-    basketName: originalBasketName,
-    instrumentList,
-  } = location.state || {};
-  const basketName = originalBasketName ? toTitleCase(originalBasketName) : "";
-  // Function to convert to title case
-
-  // useEffect to update total when brokerage or othercharges change
   useEffect(() => {
     setTotal(brokerage + othercharges + amountToInvest);
   }, [brokerage, othercharges]);
 
 
   const goBack = () => {
-    navigate(`/basket/${basketId}`);
+    navigate(`/basket/${id}`);
+  };
+
+  useEffect(() => {
+    if (basketData && newInstrumentsData) {
+      // Calculate the total required fund
+      const total = newInstrumentsData.reduce(
+        (acc, instrument) => acc + calculateFundREquired(instrument),
+        0
+      );
+  
+    
+  
+      // Set the calculated values in the state
+      setAmountToInvest(total);
+
+    }
+  }, [basketData]);
+
+
+  
+  const calculateFundREquired = (instrumentListData) => {
+    const qty = instrumentListData.quantity;
+    const cmp = instrumentListData.currentPrice;
+    const fundRequired = cmp * qty;
+
+    return fundRequired;
   };
 
   // Use fallback values to prevent errors
 const formattedAmountToInvest = (amountToInvest || 0).toLocaleString();
 const formattedTotal = (total || 0).toLocaleString();
 
+// console.log(userId,"USer Id")
 
-  // const handleConfirmOrder = () => {
-  //   if (total > currentBalance) {
-  //     toast({
-  //       title: "Warning",
-  //       description: "Your total exceeds your current balance.",
-  //       status: "warning",
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //     return;
-  //   }
-
-  //   // Assume sendOrderRequest is a function that sends the order request
-
+const handleConfirmOrder = () => {
+  // if (total > currentBalance) {
   //   toast({
-  //     position: "bottom",
-  //     render: ({ onClose }) => (
-  //       <Box
-  //         // width="421px"
-  //         // height="316px"
-  //         bg="#262A33"
-  //         borderRadius="md"
-  //         border="1px solid #BCC1CA"
-  //         boxShadow="0px 2px 5px rgba(0, 0, 0, 0.2)"
-  //         p={4}
-  //         position="relative"
-  //       >
-  //         {/* Close Button */}
-  //         <IconButton
-  //           aria-label="Close Toast"
-  //           icon={<CloseIcon />}
-  //           size="sm"
-  //           position="absolute"
-  //           top="10px"
-  //           right="10px"
-  //           onClick={onClose} // Close the toast when clicked
-  //           variant="ghost" // Optionally style the button
-  //         />
-
-  //         {/* Content */}
-  //         <Box
-  //           display="flex"
-  //           alignItems="center"
-  //           p={2} // Increased padding for better spacing
-  //         >
-  //           <HStack spacing={3}>
-  //             <Icon as={FaCircleCheck} color="#17A948" boxSize={12} />
-  //             <Text
-  //               fontFamily="Epilogue"
-  //               fontSize="18px" // Slightly larger font size
-  //               fontWeight="normal" // Changed to bold for emphasis
-  //               lineHeight="28px" // Increased line height for better readability
-  //               textAlign="left"
-  //               color="white" // Text color to contrast with the background
-  //             >
-  //               Your order will be placed at the next market open
-  //             </Text>
-  //           </HStack>
-  //         </Box>
-
-  //         {/* <Box border={"1px solid red"} display={"flex"} width={"50%"} margin={"auto"}> */}
-
-  //         <HStack justifyContent="space-between" width="50%" margin="auto">
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="14px"
-  //             fontWeight="normal" // Set to 400 as per your specification
-  //             lineHeight="22px"
-  //             textAlign="left"
-  //             color="#9095A0" // Specific color code for 'Status'
-  //             width="103px" // Specified width
-  //             height="22px" // Specified height
-  //             // Specified left position
-  //           >
-  //             Batch
-  //           </Text>
-
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="14px"
-  //             fontWeight="normal" // Set to 400 as per your specification
-  //             lineHeight="22px"
-  //             textAlign="left"
-  //             color="#9095A0" // Specific color code for 'Status'
-  //             width="103px" // Specified width
-  //             height="22px" // Specified height
-  //             // Specified left position
-  //           >
-  //             Status
-  //           </Text>
-  //         </HStack>
-
-  //         <HStack justifyContent="space-between" width="50%" margin="auto">
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="16px" // Updated font size to 16px
-  //             fontWeight="normal" // Normal weight
-  //             lineHeight="26px" // Updated line height to 26px
-  //             textAlign="left"
-  //             color="white" // Specific color code for 'Batch'
-  //             width="103px" // Specified width
-  //             height="26px" // Updated height to 26px
-  //           >
-  //             Invest
-  //           </Text>
-
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="16px" // Updated font size to 16px
-  //             fontWeight="normal" // Normal weight
-  //             lineHeight="26px" // Updated line height to 26px
-  //             textAlign="left"
-  //             color="white" // Specific color code for 'Status'
-  //             width="103px" // Specified width
-  //             height="26px" // Updated height to 26px
-  //           >
-  //             Pending
-  //           </Text>
-  //         </HStack>
-
-  //         <Box width={"90%"} margin={"auto"} mt={4}>
-  //           <Box display={"flex"} gap={2}>
-  //             <Text
-  //               fontFamily="Inter"
-  //               fontSize="14px"
-  //               fontWeight="normal"
-  //               lineHeight="22px"
-  //               textAlign="left"
-  //               color=" #A7ADB7"
-  //             >
-  //               Well Done,{" "}
-  //             </Text>
-  //             <Box display={"flex"} gap={2}>
-  //               <Text
-  //                 fontFamily="Inter"
-  //                 fontSize="14px"
-  //                 fontWeight="normal"
-  //                 lineHeight="22px"
-  //                 textAlign="left"
-  //                 color="#FFFFFF" // Optional: Adjust text color as needed
-  //               >
-  //                 {userName}
-  //               </Text>
-
-  //               <Icon as={CiCircleCheck} boxSize={6} color="#17A948" />
-  //             </Box>
-  //           </Box>
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="14px"
-  //             fontWeight="normal"
-  //             lineHeight="22px"
-  //             textAlign="left"
-  //             color=" #A7ADB7"
-  //           >
-  //             Your order's status will be updated once the markets open.
-  //           </Text>
-  //           <Text
-  //             fontFamily="Inter"
-  //             fontSize="14px"
-  //             fontWeight="normal"
-  //             lineHeight="24px"
-  //             textAlign="left"
-  //             color=" #A7ADB7"
-  //           >
-  //             You'll be redirected back in 10s
-  //           </Text>
-  //         </Box>
-  //         <Box
-  //       width={"90%"}
-  //       margin={"auto"}
-  //       display="flex"
-  //       alignItems="center"
-  //       justifyContent="space-between"
-  //     >
-  //       <Text
-  //         mt={4}
-  //         color="white"
-  //         fontFamily="Inter"
-  //         fontSize="14px"
-  //         fontWeight="normal"
-  //         lineHeight="22px"
-  //         textAlign="left"
-  //         width="178px"
-  //       >
-  //         How was your experience?
-  //       </Text>
-
-  //       {/* Star rating section */}
-  //       <HStack spacing={1}>
-  //         {[1, 2, 3, 4, 5].map((star) => (
-  //           <Icon
-  //             key={star}
-  //             as={FaStar}
-  //             color={star <= rating ? "#F3C63F" : "#A7ADB7"} // Gold color for selected stars, gray for unselected
-  //             boxSize={6}
-  //             cursor="pointer"
-  //             onClick={() => handleStarClick(star)} // Set rating on click
-  //           />
-  //         ))}
-  //       </HStack>
-  //     </Box>
-  //       </Box>
-  //     ),
-  //     duration: null, // Keep the toast open until manually closed
-  //     isClosable: true, // Allows the toast to be closable
+  //     title: "Warning",
+  //     description: "Your total exceeds your current balance.",
+  //     status: "warning",
+  //     duration: 5000,
+  //     isClosable: true,
   //   });
- 
-  // };
+  //   return;
+  // }
 
-     // sendOrderRequest(total)
-    // .then(() => {
-    //   toast({
-    //     position: "bottom",
-    //     render: () => (
-    //       <Box
-    //         width="421px"
-    //         height="316px"
-    //         bg="white"
-    //         borderRadius="6px 0px 0px 0px"
-    //         border="1px solid #BCC1CA"
-    //         boxShadow="0px 2px 5px rgba(0, 0, 0, 0.2)"
-    //         p={4}
-    //       >
-    //         <Text
-    //           fontFamily="Epilogue"
-    //           fontSize="16px"
-    //           fontWeight="700"
-    //           lineHeight="26px"
-    //           textAlign="left"
-    //           mb={4}
-    //         >
-    //           Your Order will be placed in next market open
-    //         </Text>
-    //         <HStack justifyContent="space-between">
-    //           <Text fontWeight="bold">Batch:</Text>
-    //           <Text>Pending</Text>
-    //         </HStack>
-    //         <HStack justifyContent="space-between" mt={2}>
-    //           <Text fontWeight="bold">Invest:</Text>
-    //           <Text>{total}</Text>
-    //         </HStack>
-    //         <Text mt={4}>Customer: {userName}</Text>
-    //         <Text mt={4}>How was your experience?</Text>
-    //         <HStack spacing={1}>
-    //           {[1, 2, 3, 4, 5].map((star) => (
-    //             <Text
-    //               key={star}
-    //               fontSize="24px"
-    //               cursor="pointer"
-    //               color={rating >= star ? "gold" : "gray.300"}
-    //               onClick={() => handleStarClick(star)}
-    //             >
-    //               ★
-    //             </Text>
-    //           ))}
-    //         </HStack>
-    //       </Box>
-    //     ),
-    //     duration: null, // Keep the toast open until manually closed
-    //     isClosable: false,
-    //   });
-    // })
-    // .catch((error) => {
-    //   console.error("Error placing order:", error);
-    //   toast({
-    //     title: "Error",
-    //     description: "There was a problem placing your order. Please try again.",
-    //     status: "error",
-    //     duration: 5000,
-    //     isClosable: true,
-    //   });
-    // });
-
-    const handleConfirmOrder = () => {
-      if (total > currentBalance) {
+  dispatch(OrderPlaced(id, lots, token))
+    .then((res) => {
+console.log(res,"response")
+      if(res.data.status==="failed"){
         toast({
-          title: 'Warning',
-          description: "Your total exceeds your current balance.",
-          status: 'warning',
+          title: "",
+          description: res.data.message,
+          status: "warning",
           duration: 5000,
           isClosable: true,
         });
-        return;
       }
-      toast({
-        duration: 10000,
-        position: 'bottom',
-        render: (props) => (
-          <CustomToast
-            userName={userName}
-            rating={rating}
-            tempRating={tempRating}
-            setTempRating={setTempRating}
-            handleStarClick={handleStarClick}
-            onClose={props.onClose}
-          />
-        ),
-      });
+
+
+      if (res.data.status === "success") {
+        toast({
+          duration: 10000,
+          position: "bottom",
+          render: (props) => (
+            <CustomToast
+              userName={userName}
+              rating={rating}
+              tempRating={tempRating}
+              setTempRating={setTempRating}
+              handleStarClick={handleStarClick}
+              onClose={props.onClose}
+            />
+          ),
+        });
+      
+      
+           // Set a timer to navigate back after 10 seconds
+           setTimeout(() => {
+
+            navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+          }, 10000); // 10 seconds delay
   
+      }
+      
+    })
+
+    .catch((error) => {
+      console.log(error, "error confirm order ");
+    });
 
 };
   
@@ -400,8 +233,16 @@ const formattedTotal = (total || 0).toLocaleString();
       setRating(starRating); // Set rating immediately
     };
 
+
+      // Format time as MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
   return (
-    <Box borderWidth="1px" borderRadius="lg" boxShadow="lg">
+    <Box >
       <Box p={4} pb={0}>
         <IconButton
           aria-label="Go back"
@@ -419,7 +260,7 @@ const formattedTotal = (total || 0).toLocaleString();
         p={4}
         display="flex"
         // border={"2px solid red"}
-        justifyContent="center"
+        // justifyContent="center"
         alignItems="left"
         // Optional: adjust height if you want it to be centered vertically on the full viewport
       >
@@ -433,7 +274,7 @@ const formattedTotal = (total || 0).toLocaleString();
           textAlign="left" // Center the text horizontally
           // mt={4}
         >
-          {basketName}
+          {toTitleCase(basketData.title)}
         </Heading>
       </Box>
 
@@ -446,16 +287,19 @@ const formattedTotal = (total || 0).toLocaleString();
         alignItems="center" // Vertically align the text in the center
         padding="7px 12px" // Add padding to give spacing similar to top and left
       >
+        {token && (
         <Text
-          fontFamily="Inter"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+          
           fontSize="14px"
           fontWeight="400"
           lineHeight="22px"
           textAlign="left"
           color="#117B34"
         >
-          Complete your transaction in 5:00 before the session expires
+          Complete your transaction in {formatTime(timeLeft)} before the session expires
         </Text>
+      )}
       </Box>
 
       <Box
@@ -479,7 +323,7 @@ const formattedTotal = (total || 0).toLocaleString();
         </Heading>
 
         <TableContainer>
-          <Table variant="unstyled">
+          <Table variant="unstyled" >
             <Thead>
               <Tr>
                 <Th
@@ -525,8 +369,8 @@ const formattedTotal = (total || 0).toLocaleString();
             </Thead>
 
             <Tbody>
-              {instrumentList &&
-                instrumentList.map((instrument, index) => (
+              {newInstrumentsData &&
+                newInstrumentsData.map((instrument, index) => (
                   <Tr key={index}>
                     <Td
                       width="99px"
@@ -538,7 +382,7 @@ const formattedTotal = (total || 0).toLocaleString();
                       textAlign="left"
                       color="#DEE1E6"
                     >
-                      {instrument.name}
+                      {instrument.instrument}
                     </Td>
                     <Td
                       width="99px"
@@ -745,56 +589,75 @@ const formattedTotal = (total || 0).toLocaleString();
       </Box>
 
       <Box
-        border="2px solid #9095A0"
-        boxShadow="0px 2px 5px 0px #171A1F17, 0px 0px 2px 0px #171A1F1F"
-        p={4}
-        alignItems={"center"}
-      >
-        <Box
-          // left="20px"
-          p={2}
-        >
-          <Text
-            fontFamily="Inter"
-            fontSize="12px"
-            fontWeight="noral"
-            lineHeight="18px"
-            textAlign="left"
-            color="#A7ADB7"
-          >
-            You are placing an order after market hours for these 3 stocks. Your
-            order will be executed on next market day.
-          </Text>
-        </Box>
+  border="2px solid #9095A0"
+  boxShadow="px 2px 5px 0px #171A1F17, 0px 0px 2px 0px #171A1F1F"
+  p={2}
+  margin={"auto"}
+  width="98%" // Ensure the container spans full width
+  alignItems="center"
+>
+{ !isMarketOpen && (
+    <Box p={2} textAlign="left">
+      <Text
+        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+        fontSize={["10px", "12px"]}
+        fontWeight="normal"
+        lineHeight={["16px", "18px"]}
 
-        <Box
-          margin="auto"
-          display="flex" // Enable Flexbox
-          justifyContent="center" // Center the button horizontally
-          alignItems="center" // Center the button vertically
-          height="100px" // Set a height to ensure vertical centering
-        >
-          <Button
-           color={"#1DD75B"}
-           border={"1px solid #1DD75B"}
-            variant="outline"
-            width={"80%"}
-            height={"60%"}
-            _hover={{
-              boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
-              transform: "scale(1.05)",
-            }}
-            _active={{
-              boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
-              transform: "scale(0.95)",
-            }}
-            onClick={handleConfirmOrder}
-            isLoading={isSubmitting}
-          >
-            Confirm Order
-          </Button>
-        </Box>
-      </Box>
+        color="#A7ADB7"
+      >
+        You are placing an{" "}
+        <Text as="span" fontWeight="bold"
+        fontFamily={"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"}
+        color="white">
+          order after market hours
+        </Text>{" "}
+        for these {newInstrumentsData.length} stocks. Your order will be executed on the next market day.  Please keep some  
+        <Text as="span" fontWeight="bold"
+        fontFamily={"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"}
+        color="white">
+        {" "}   buffer amount of {bufferAmount} {" "}
+        </Text>
+     
+        
+        
+        
+        for next day market movement.
+      </Text>
+    </Box>
+  )}
+
+
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="100px"
+    mt={2}
+    width="100%" // Ensure the box spans full width to avoid cutoff
+  >
+    <Button
+      color="#1DD75B"
+      border="1px solid #1DD75B"
+      variant="outline"
+      fontFamily={"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"}
+      width={["90%", "80%"]} // Responsive width
+      height={["50px", "60px"]}
+      _hover={{
+        boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+        transform: "scale(1.05)",
+      }}
+      _active={{
+        boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
+        transform: "scale(0.95)",
+      }}
+      onClick={handleConfirmOrder}
+      isLoading={isSubmitting}
+    >
+      Confirm Order
+    </Button>
+  </Box>
+</Box>
     </Box>
   );
 };

@@ -1,49 +1,268 @@
-import React from "react";
-import { Box, Text, Flex, Progress, Icon } from "@chakra-ui/react";
-import { MdCheckCircle, MdCancel } from "react-icons/md"; // Importing icons
-import { CiCircleCheck } from "react-icons/ci";
-import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { BsPatchCheck } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { Box, Text, Flex, Icon, Divider } from "@chakra-ui/react";
+import Cookies from "js-cookie";
+import {
+  BsArrowDownLeftCircle,
+  BsArrowUpRightCircle,
+  BsPatchCheck,
+} from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSymbols } from "../../../Redux/symbolReducer/action";
 
+const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) => {
+  // const Symbols = useSelector((store) => store.symbolsReducer.symbols);
+  const dispatch = useDispatch();
+  const token = Cookies.get("login_token_client");
+  // useEffect(()=>{
+  //     dispatch(fetchSymbols(token));
+  // },[token])
 
-const BasketConstituents = ({ basketData }) => {
-  console.log(basketData.instrumentList, "basketData.instrumentList");
+  const handleUpsidePotentialPercentage = (instrumentListData) => {
+    let cmp = Number(instrumentListData.currentPrice);
+    let takeProfit = Number(instrumentListData.takeProfit) || 986;
+
+    let upsidePotential = ((takeProfit - cmp) / cmp) * 100;
+    let upsidePotentialPercentage = Math.floor(upsidePotential);
+
+    // If the upside potential is less than 0, return 0 to avoid summing a negative value
+    if (upsidePotentialPercentage < 0) {
+      return 0; // or you can handle this differently based on your requirement
+    }
+
+    return upsidePotentialPercentage;
+  };
+
+  const handleUpsidePotential = (instrumentListData) => {
+    let cmp = Number(instrumentListData.currentPrice);
+    let takeProfit = Number(instrumentListData.takeProfit || 985);
+    let qty = Number(instrumentListData.quantity);
+
+    let upsidePotential = ((takeProfit - cmp) * qty).toFixed(2);
+
+    return Number(upsidePotential);
+  };
+
+  // const handleSymbolName = (symbol) => {
+  //   if (symbol !== "" && symbol !== null) {
+  //     let filterSymbolName = Symbols.filter((ele) => ele.instrument == symbol);
+  //     let result = filterSymbolName[0];
+
+  //     if (result !== undefined) {
+  //       return result.name;
+  //     }
+  //   }
+
+  //   return symbol; // Return an empty string if the symbol is not found or invalid
+  // };
+
 
   return (
-    <Box className="basket-constituents" p={4} mt={4}>
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
+    <Box className="basket-constituents" p={4} >
+      <Text fontSize="lg" fontWeight="bold" mb={4} fontFamily={"Helvetica"}>
         Basket Constituents & Weights
       </Text>
-      {basketData.instrumentList.length > 0 ? (
-        basketData.instrumentList.map((inst, index) => {
-          return inst?.isInvested ? (
-            // <Box key={`inst_${index}`} className="new-constituent-item" mb={4} p={4} borderWidth="1px" borderRadius="md" boxShadow="md">
-            //   <Flex justify="space-between" align="center">
-            //     <Flex align="center">
-            //       <Icon
-            //         as={inst.avrageReturnsFlag === "green" ? MdCheckCircle : MdCancel}
-            //         boxSize={6}
-            //         color={inst.avrageReturnsFlag === "green" ? "green.500" : "red.500"}
-            //         mr={2}
-            //       />
-            //       <Text fontSize="md" fontWeight="semibold">
-            //         {inst?.security}
-            //       </Text>
-            //     </Flex>
-            //     <Text>{inst?.avgReturn || ""}</Text>
-            //   </Flex>
-            //   <Box mt={2}>
-            //     <Text fontSize="sm" mb={1}>
-            //       Weight:
-            //     </Text>
-            //     <Progress value={inst?.weight} size="sm" colorScheme="blue" />
-            //   </Box>
-            // </Box>
 
+      <Divider
+        ml={2}
+        mr={2}
+        mb={4}
+        m="auto"
+        width="350px"
+        border="1px solid #BCC1CA"
+        position="relative"
+      />
+
+      {basketData?.instrumentList?.length > 0 ? (
+        orderHistory?.length > 0 ? (
+          orderHistory.map((inst, index) => (
             <Box
               key={`inst_${index}`}
               className="new-constituent-item"
               mb={4}
+              p={4}
+              mt={4}
+              bg={"#262A33"}
+              borderWidth="1px"
+              borderRadius="md"
+              boxShadow="md"
+            >
+              <Flex justify="space-between" align="center">
+                <Flex align="center">
+                  <Icon
+                   fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                   
+                    as={
+                      handleUpsidePotentialPercentage(inst) > 0
+                        ? BsArrowUpRightCircle
+                        : BsArrowDownLeftCircle
+                    } // You can change the icon for other flags
+                    boxSize={6}
+                    color={
+                      handleUpsidePotentialPercentage(inst) > 0
+                        ? "#1DD75B"
+                        : "#E05858"
+                    } // Adjust this if needed
+                    mr={2}
+                  />
+                  <Text fontSize="lg" fontWeight="semibold" 
+                    //  fontSize="lg"
+                    //  fontWeight="500"
+                     lineHeight="24px"
+                   fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                   >
+                    {/* {handleSymbolName(inst?.instrument)} */}
+                    {inst?.instrument}
+                  </Text>
+                </Flex>
+
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                   
+                    fontSize="xl"
+                    fontWeight="500"
+                    lineHeight="22px"
+                    textAlign="right"
+                    color={
+                      handleUpsidePotentialPercentage(inst) > 0
+                        ? "#1DD75B"
+                        : "#E05858"
+                    }
+                  >
+                    ₹ {handleUpsidePotential(inst).toFixed(2)}{" "}
+                    {/* Display the upside potential */}
+                  </Text>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                   
+                    fontSize="xl"
+                    fontWeight="500"
+                    lineHeight="18px"
+                    textAlign="right"
+                    color={
+                      handleUpsidePotentialPercentage(inst) > 0
+                        ? "#1DD75B"
+                        : "#E05858"
+                    }
+                  >
+                    ({handleUpsidePotentialPercentage(inst)}%)
+                  </Text>
+                </Box>
+              </Flex>
+              <Box
+                mt={2}
+                display="flex"
+                width="100%"
+                gap={2}
+                justifyContent="flex-end" // Aligns content to the right
+                alignItems="center" // Aligns items vertically centered
+              >
+                <Box display="flex" gap={1} alignItems="center" width={"44%"}>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    color={"#BCC1CA"}
+                  >
+                    Weightage:
+                  </Text>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    textAlign="left" // Align text to the left
+                  >
+                    2%
+                  </Text>
+                </Box>
+
+                <Box display="flex" gap={1} alignItems="center" width={"44%"}>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    color={"#BCC1CA"}
+                  >
+                    Current Price:
+                  </Text>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    textAlign="left" // Align text to the left
+                  >
+                    {inst?.currentPrice || "N/A"}{" "}
+                    {/* Added default value if currentPrice is undefined */}
+                  </Text>
+                </Box>
+              </Box>
+
+              <Box
+                mt={2}
+                display="flex"
+                width="100%"
+                gap={2}
+                justifyContent="flex-end" // Aligns content to the right
+                alignItems="center" // Aligns items vertically centered
+              >
+                <Box display="flex" gap={1} alignItems="center" width={"44%"}>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                   
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    color={"#BCC1CA"}
+                  >
+                    Shares :
+                  </Text>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    textAlign="left" // Align text to the left
+                  >
+                    {inst?.quantity}
+                  </Text>
+                </Box>
+
+                <Box display="flex" gap={1} alignItems="center" width={"44%"}>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    color={"#BCC1CA"}
+                  >
+                    Average Buy price:
+                  </Text>
+                  <Text
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                    fontSize="11px"
+                    fontWeight="400"
+                    lineHeight="22px"
+                    textAlign="left" // Align text to the left
+                  >
+                    8
+                  </Text>
+                </Box>
+              </Box>
+
+       
+            </Box>
+          ))
+        ) : (
+          newInstrumentsData.map((inst, index) => (
+            <Box
+              key={`inst_${index}`}
+              className="new-constituent-item"
+              mb={4}
+              mt={4}
               p={4}
               bg={"#262A33"}
               borderWidth="1px"
@@ -54,31 +273,31 @@ const BasketConstituents = ({ basketData }) => {
                 <Flex align="center">
                   <Icon
                     as={
-                      inst.avrageReturnsFlag === "green"
+                      handleUpsidePotentialPercentage(inst) > 0
                         ? BsPatchCheck
                         : BsPatchCheck
                     }
                     boxSize={6}
-                    // bg={"#D3F9E0"}
-                    // borderRadius={"50%"}
                     color={
-                      inst.avrageReturnsFlag === "green"
+                      handleUpsidePotentialPercentage(inst) > 0
                         ? "#1DD75B"
                         : "#1DD75B"
-                    }
+                    } // You can change these conditions for other flags
                     mr={2}
                   />
                   <Text fontSize="md" fontWeight="semibold">
-                    {inst?.name}
+                    {/* {handleSymbolName(inst?.instrument) } */}
+                    {inst?.instrument}
                   </Text>
                 </Flex>
                 <Box>
-                  <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" gap={2}>
                     <Text
                       fontFamily="Inter"
                       fontSize="11px"
                       fontWeight="400"
                       lineHeight="18px"
+                      color={"#BCC1CA"}
                     >
                       Weightage:
                     </Text>
@@ -89,15 +308,16 @@ const BasketConstituents = ({ basketData }) => {
                       lineHeight="18px"
                       width="85px"
                     >
-                      {inst?.allocation}%
+                      {inst?.allocation || "8%"}
                     </Text>
                   </Box>
-                  <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" gap={2}>
                     <Text
                       fontFamily="Inter"
                       fontSize="11px"
                       fontWeight="400"
                       lineHeight="18px"
+                      color={"#BCC1CA"}
                     >
                       Shares:
                     </Text>
@@ -108,95 +328,14 @@ const BasketConstituents = ({ basketData }) => {
                       lineHeight="18px"
                       width="85px"
                     >
-                      {inst?.shares}
+                      {inst?.quantity || "N/A"}
                     </Text>
                   </Box>
                 </Box>
               </Flex>
             </Box>
-          ) : (
-            <Box
-              key={`inst_${index}`}
-              className="new-constituent-item"
-              mb={4}
-              p={4}
-              bg={"#262A33"}
-              borderWidth="1px"
-              borderRadius="md"
-              boxShadow="md"
-            >
-              <Flex justify="space-between" align="center">
-                <Flex align="center">
-                  <Icon
-                    as={
-                      inst.avrageReturnsFlag === "gray"
-                        ? BsPatchCheck
-                        : BsPatchCheck
-                    }
-                    boxSize={6}
-                    
-                    color={
-                      inst.avrageReturnsFlag === "gray"
-                        ? "#1DD75B"
-                        : "#1DD75B"
-                    }
-                    mr={2}
-                  />
-                  <Text fontSize="md" fontWeight="semibold">
-                    {inst?.name}
-                  </Text>
-                </Flex>
-                <Box>
-                  <Box display="flex" alignItems="center">
-                    <Text
-                      fontFamily="Inter"
-                      fontSize="11px"
-                      fontWeight="400"
-                      lineHeight="18px"
-                      //   width="85px"
-
-                      //   height="36px"
-                    >
-                      Weightage:
-                    </Text>
-                    <Text
-                      fontFamily="Inter"
-                      fontSize="11px"
-                      fontWeight="400"
-                      lineHeight="18px"
-                      width="85px"
-                      //   height="36px"
-                    >
-                      {inst?.allocation}%
-                    </Text>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <Text
-                      fontFamily="Inter"
-                      fontSize="11px"
-                      fontWeight="400"
-                      lineHeight="18px"
-                      //   width="85px"
-                      //   height="36px"
-                    >
-                      Shares:
-                    </Text>
-                    <Text
-                      fontFamily="Inter"
-                      fontSize="11px"
-                      fontWeight="400"
-                      lineHeight="18px"
-                      width="85px"
-                      //   height="36px"
-                    >
-                      {inst?.shares}
-                    </Text>
-                  </Box>
-                </Box>
-              </Flex>
-            </Box>
-          );
-        })
+          ))
+        )
       ) : (
         <Text>No constituents available.</Text>
       )}
@@ -205,3 +344,4 @@ const BasketConstituents = ({ basketData }) => {
 };
 
 export default BasketConstituents;
+

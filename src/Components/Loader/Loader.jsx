@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
-import { keyframes } from '@emotion/react';
+import { keyframes } from '@emotion/react'; // Import keyframes from @emotion/react
+import { Box } from '@chakra-ui/react'; // Chakra UI components
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }

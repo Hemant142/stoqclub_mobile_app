@@ -1,23 +1,61 @@
 // CustomToast.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   HStack,
   Icon,
   IconButton,
   Text,
-  useToast,
-} from '@chakra-ui/react';
-import { CloseIcon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 import { FaCircleCheck, FaStar } from "react-icons/fa6";
 import { CiCircleCheck } from "react-icons/ci";
 
 const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
-    const [tempRating,setTempRating] =useState(0)
+  const [tempRating, setTempRating] = useState(0);
+  const [orderStatus, setOrderStatus] = useState("Pending"); // Default status as 'Pending'
+  const [countdown, setCountdown] = useState(10); // Countdown state for 10 seconds
+
+  useEffect(() => {
+    const currentTime = new Date();
+    const currentHours = currentTime.getHours();
+    const currentMinutes = currentTime.getMinutes();
+
+    // Convert 9:15 AM to 3:20 PM into minutes for easier comparison
+    const startTime = 9 * 60 + 15; // 9:15 AM
+    const endTime = 15 * 60 + 20; // 3:20 PM
+    const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+
+    // Check if current time is within the market hours
+    if (currentTimeInMinutes >= startTime && currentTimeInMinutes <= endTime) {
+      setOrderStatus("Completed");
+    } else {
+      setOrderStatus("Pending");
+    }
+  }, []);
+
+  useEffect(() => {
+    // Timer for 10-second countdown
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => {
+        if (prevCountdown > 1) {
+          return prevCountdown - 1;
+        } else {
+          clearInterval(timer); // Stop the timer at 0
+          onClose(); // Close the toast after 10 seconds
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timer); // Cleanup the interval on component unmount
+  }, [onClose]);
+
   return (
     <Box
       bg="#262A33"
       borderRadius="md"
+      width={"100%"}
       border="1px solid #BCC1CA"
       boxShadow="0px 2px 5px rgba(0, 0, 0, 0.2)"
       p={4}
@@ -47,7 +85,9 @@ const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
             textAlign="left"
             color="white"
           >
-            Your order will be placed at the next market open
+            {orderStatus === "Completed"
+              ? "Your order has been successfully placed."
+              : "Your order will be processed at the next market open."}
           </Text>
         </HStack>
       </Box>
@@ -102,7 +142,7 @@ const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
           width="103px"
           height="26px"
         >
-          Pending
+          {orderStatus}
         </Text>
       </HStack>
 
@@ -140,8 +180,11 @@ const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
           textAlign="left"
           color="#A7ADB7"
         >
-          Your order's status will be updated once the markets open.
+          {orderStatus === "Completed"
+            ? "Your order has been successfully placed."
+            : "Your order's status will be updated once the markets open."}
         </Text>
+
         <Text
           fontFamily="Inter"
           fontSize="14px"
@@ -150,7 +193,7 @@ const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
           textAlign="left"
           color="#A7ADB7"
         >
-          You'll be redirected back in 10s
+          You'll be redirected back in {countdown}s {/* Countdown display */}
         </Text>
       </Box>
 
@@ -180,13 +223,17 @@ const CustomToast = ({ userName, rating, handleStarClick, onClose }) => {
             <Icon
               key={star}
               as={FaStar}
-              color={star <= (tempRating !== null ? tempRating : rating) ? "#F3C63F" : "#A7ADB7"} // Gold for selected stars, gray for unselected
+              color={
+                star <= (tempRating !== null ? tempRating : rating)
+                  ? "#F3C63F"
+                  : "#A7ADB7"
+              } // Gold for selected stars, gray for unselected
               boxSize={6}
               cursor="pointer"
               onClick={() => {
                 setTempRating(star); // Set temp rating on click
                 handleStarClick(star); // Call the function to handle the click event
-              }} 
+              }}
             />
           ))}
         </HStack>

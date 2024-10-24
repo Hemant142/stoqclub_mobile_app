@@ -3,10 +3,14 @@ import {
     BASKET_FAILURE,
     BASKET_REQUEST,
     GET_BASKET_SUCCESS,
+    GET_BASKETDATA_SUCCESS,
+    GET_NEW_INSTRUMENT_LIST_SUCCESS,
   } from "../actionTypes";
   
   const initalState = {
     baskets: [],
+    basketData:{},
+    newInstrumentsData:[],
     isLoading: false,
     isError: false,
     error: "",
@@ -29,6 +33,23 @@ import {
           baskets: action.payload,
           isError: false,
         };
+
+        case GET_BASKETDATA_SUCCESS:
+          return {
+            ...state,
+            isLoading: false,
+            basketData: action.payload,
+            isError: false,
+          };
+
+
+          case GET_NEW_INSTRUMENT_LIST_SUCCESS:
+            return {
+              ...state,
+              isLoading: false,
+              newInstrumentsData: action.payload,
+              isError: false,
+            };
   
       default:
         return state;
