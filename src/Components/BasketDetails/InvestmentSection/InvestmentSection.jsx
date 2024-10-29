@@ -17,7 +17,7 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { AiOutlineMore } from "react-icons/ai";
-
+import { GiExitDoor } from "react-icons/gi";
 
 
 const InvestmentSection = (props) => {
@@ -233,21 +233,21 @@ const InvestmentSection = (props) => {
           
             {/* Updated Icon Button with FiMoreHorizontal for 3-dot menu */}
             <IconButton
-              icon={<AiOutlineMore />}
+              icon={<GiExitDoor />}
               aria-label="Menu"
               width="40px"
               height="60px"
               fontSize="38px"
-              color="#1DD75B"
-              border="1px solid #1DD75B"
+              color="#DB4437"
+              border="1px solid #DB4437"
               variant="outline"
               borderRadius="md" // Makes the button circular
               _hover={{
-                boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+                boxShadow: "0 0 10px #C12126",
                 transform: "scale(1.05)",
               }}
               _active={{
-                boxShadow: "0 0 15px #1DD75B",
+                boxShadow: "0 0 15px #C12126",
                 transform: "scale(0.95)",
               }}
               // onClick={handleMenuClick} // Replace with actual menu click handler
