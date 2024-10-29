@@ -237,9 +237,9 @@ export default function Rebalancing({ rebalancingList,id ,RebalancingSuccess}) {
                   fontWeight="600"
                   lineHeight="22px"
                   textAlign="center"
-                  color="#117B34"
+                  color= {inst?.orderType=="Entry"? "#117B34": "#DB4437"}
                 >
-                  Enter
+                  {inst?.orderType}
                 </Text>
               </Box>
             </Box>

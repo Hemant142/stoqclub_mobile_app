@@ -47,7 +47,7 @@ export default function BasketDetails() {
   const { isLoading, newInstrumentsData, basketData } = useSelector(
     (store) => store.basketReducer
   );
-
+console.log(isRebalancing,"isRebalancing")
   
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
@@ -168,11 +168,12 @@ export default function BasketDetails() {
       }
     });
   
+    // console.log(filteredRebalancingList,"filteredRebalancingList")
     // Update the rebalancing list state with the filtered instruments
     setRebalancingList(filteredRebalancingList);
   }, [newInstrumentsData, orderHistory, basketData.instrumentList, isRebalancingSuccess]);
   
-
+console.log(rebalancingList,"Rebalincing List")
   // Function to generate last 6 months data for both Basket and Underlying Index
   const generateLast6MonthsData = () => {
     const currentDate = new Date();
@@ -305,7 +306,7 @@ export default function BasketDetails() {
                 orderHistory={orderHistory}
               />
 
-              {rebalancingList.length > 0 &&isRebalancing &&orderHistory.length>0 ? (
+              {orderHistory.length>0 ||rebalancingList.length > 0 ||isRebalancing   ? (
                 <Box>
                   <Divider
                     ml={2}
