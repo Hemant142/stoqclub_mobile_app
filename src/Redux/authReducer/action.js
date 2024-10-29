@@ -68,7 +68,7 @@ export const getBalance = (token) => (dispatch) => {
       },
     })
     .then((res) => {
-  
+
       if(res.data.status==="success"){
 
         dispatch({ type: USER_BALANCE_SUCCESS, payload: res.data.data.balance }); // Assuming the balance is in res.data.balance

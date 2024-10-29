@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import {
   getBasketDetails,
   getOrderHistory,
+  RebalancingNewOrder,
 } from "../Redux/basketReducer/action";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Components/Loader/Loader";
@@ -38,18 +39,21 @@ export default function BasketDetails() {
   const [orderHistory, setOrderHistory] = useState([]);
   const [underlyingIndexLineChart, setUnderlyingIndexLineChart] = useState([]);
   const [rebalancingList, setRebalancingList] = useState([]);
+  const [isRebalancing,setIsRebalancing]=useState(true)
+  const [isRebalancingSuccess,setIsRebalancingSuccess]=useState(true)
 
   let userId = Cookies.get("user2Id_client");
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
-  const {isLoading,newInstrumentsData,basketData}=useSelector((store) => store.basketReducer);
+  const { isLoading, newInstrumentsData, basketData } = useSelector(
+    (store) => store.basketReducer
+  );
 
-
+  
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
 
     dispatch(getOrderHistory(id, token))
       .then((res) => {
-      
         if (res.data.status === "success") {
           if (res.data.data.orderHistory.length > 0) {
             // Step 1: Group instruments by name
@@ -83,10 +87,11 @@ export default function BasketDetails() {
       });
 
     dispatch(getBalance(token));
+  }, [token,isRebalancingSuccess]);
 
-  }, [token]);
-
-
+  const RebalancingSuccess=()=>{
+    setIsRebalancingSuccess(!isRebalancingSuccess)
+  }
 
   useEffect(() => {
     if (basketData && newInstrumentsData) {
@@ -95,72 +100,78 @@ export default function BasketDetails() {
         (acc, instrument) => acc + calculateFundREquired(instrument),
         0
       );
-  
+
       // Calculate the sum of all upside potential percentages
       const totalUpsidePotentialPercentage = newInstrumentsData.reduce(
         (acc, instrument) => acc + handleUpsidePotentialPercentage(instrument),
         0
       );
-  
+
       const totalUpsidePotential = newInstrumentsData.reduce(
         (acc, instrument) => acc + handleUpsidePotential(instrument),
         0
       );
-  
+
       // Set the calculated values in the state
       setMinAmount(total);
       setUpsidePotentialPercentage(totalUpsidePotentialPercentage); // Assuming you have a state for upside potential
       setUpsidePotential(totalUpsidePotential);
     }
 
-    if(basketData){
-      setApiLoading(false)
-    }else{
-      setApiLoading(true)
+    if (basketData) {
+      setApiLoading(false);
+    } else {
+      setApiLoading(true);
     }
-
   }, [basketData]);
-  
+
   useEffect(() => {
     const now = new Date(); // Get the current date and time
-    
-    // Logic to filter out instruments not in orderHistory and that have passed the 12-hour window
+  
     const filteredRebalancingList = newInstrumentsData.filter((newInstrument) => {
       const statusDate = new Date(newInstrument.statusDate); // Convert statusDate to a Date object
   
       // Check if the instrument is not in orderHistory
-      const isNotInOrderHistory = !orderHistory.some((order) => order.instrument === newInstrument.instrument);
+      const isNotInOrderHistory = !orderHistory.some(
+        (order) => order.instrument === newInstrument.instrument
+      );
   
       // Check if the statusDate is within the last 12 hours
-      const isWithin12Hours = (now - statusDate) <= 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+      const isWithin12Hours = now - statusDate <= 12 * 60 * 60 * 1000; // 12 hours in milliseconds
   
-      // Only include instruments that pass both conditions
-      return isNotInOrderHistory && isWithin12Hours;
+      if (isWithin12Hours && isNotInOrderHistory) {
+        setIsRebalancing(true); // Set rebalancing if within 12 hours and not in orderHistory
+        return true;
+      }
+      setIsRebalancing(false);
+      return false;
     });
   
-    // Check for instruments with both "Entry" and "Exit" in orderHistory
+    // Loop through orderHistory to include only necessary entries in rebalancing list
     orderHistory.forEach((order) => {
-      const entryOrder = basketData.instrumentList.find((item) =>
-        item.instrument === order.instrument && item.orderType === "Entry"
+      const entryOrder = basketData.instrumentList.find(
+        (item) =>
+          item.instrument === order.instrument && item.orderType === "Entry"
       );
-      const exitOrder = basketData.instrumentList.find((item) =>
-        item.instrument === order.instrument && item.orderType === "Exit"
+      const exitOrder = basketData.instrumentList.find(
+        (item) =>
+          item.instrument === order.instrument && item.orderType === "Exit"
       );
   
-      if (entryOrder && exitOrder) {
-        // If both entry and exit exist, release the entry and store the exit in rebalancing
-        filteredRebalancingList.push(exitOrder); // Keep exit order in rebalancingList
-      } else if (entryOrder && !exitOrder) {
-        // If only entry exists, include it in the rebalancing list
+      // If both entry and exit exist, include only the exit in rebalancing
+      if (entryOrder && exitOrder && !filteredRebalancingList.some(item => item.instrument === exitOrder.instrument)) {
+        filteredRebalancingList.push(exitOrder);
+      } 
+      // If only entry exists, include it if it's not already in filteredRebalancingList
+      else if (entryOrder && !exitOrder && !filteredRebalancingList.some(item => item.instrument === entryOrder.instrument)) {
         filteredRebalancingList.push(entryOrder);
       }
     });
   
     // Update the rebalancing list state with the filtered instruments
     setRebalancingList(filteredRebalancingList);
-  }, [newInstrumentsData, orderHistory, basketData.instrumentList]);
+  }, [newInstrumentsData, orderHistory, basketData.instrumentList, isRebalancingSuccess]);
   
-
 
   // Function to generate last 6 months data for both Basket and Underlying Index
   const generateLast6MonthsData = () => {
@@ -184,17 +195,11 @@ export default function BasketDetails() {
     return { dataBasket, dataUnderlying };
   };
 
-
-
   useEffect(() => {
     const { dataBasket, dataUnderlying } = generateLast6MonthsData();
     setLineChartData(dataBasket);
     setUnderlyingIndexLineChart(dataUnderlying);
   }, []);
-
-
-
-
 
   const calculateFundREquired = (instrumentListData) => {
     const qty = instrumentListData.quantity;
@@ -228,6 +233,8 @@ export default function BasketDetails() {
 
     return Number(upsidePotential);
   };
+
+
 
 
   return (
@@ -298,44 +305,38 @@ export default function BasketDetails() {
                 orderHistory={orderHistory}
               />
 
-
-
-              
-
-              {rebalancingList.length>0?(
+              {rebalancingList.length > 0 &&isRebalancing &&orderHistory.length>0 ? (
                 <Box>
+                  <Divider
+                    ml={2}
+                    mr={2}
+                    m="auto"
+                    width="350px" // Sets the width
+                    border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                    position="relative"
+                  />
 
-<Divider
-                ml={2}
-                mr={2}
-                m="auto"
-                width="350px" // Sets the width
-                border="1px solid #BCC1CA" // Adds the solid border with the specified color
-                position="relative"
-              />
+                  <Rebalancing rebalancingList={rebalancingList} id={id} RebalancingSuccess={RebalancingSuccess} />
 
-              <Rebalancing rebalancingList={rebalancingList}/>
-
-
-              <Divider
-                ml={2}
-                mr={2}
-                m="auto"
-                width="350px" // Sets the width
-                border="1px solid #BCC1CA" // Adds the solid border with the specified color
-                position="relative"
-              />
+                  <Divider
+                    ml={2}
+                    mr={2}
+                    m="auto"
+                    width="350px" // Sets the width
+                    border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                    position="relative"
+                  />
                 </Box>
-              )
-            :( <Divider
-              ml={2}
-              mr={2}
-              m="auto"
-              width="350px" // Sets the width
-              border="1px solid #BCC1CA" // Adds the solid border with the specified color
-              position="relative"
-            />)
-            }
+              ) : (
+                <Divider
+                  ml={2}
+                  mr={2}
+                  m="auto"
+                  width="350px" // Sets the width
+                  border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                  position="relative"
+                />
+              )}
 
               <Activity basketData={basketData} orderHistory={orderHistory} />
 
@@ -357,6 +358,7 @@ export default function BasketDetails() {
                 currentBalance={Number(currentBalance) || 0} // Provide a default if currentBalance is undefined
                 instrumentList={newInstrumentsData || []} // Provide a default if instrumentList is undefined
                 upsidePotential={upsidePotential || 0}
+                orderHistory={orderHistory.length}
                 upsidePotentialPercentage={
                   Number(upsidePotentialPercentage) || 0
                 }

@@ -3,7 +3,7 @@ import { Box, Flex, Spinner, IconButton, Text, ListItem, OrderedList } from "@ch
 // import { Box, Text, ListItem, OrderedList } from "@chakra-ui/react";
 import { LuChevronLeftCircle } from "react-icons/lu";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { getBasketDetails } from "../Redux/basketReducer/action";
 import BasketHeader from "../Components/BasketDetails/BasketHeader/BasketHeader";
@@ -13,29 +13,22 @@ const Disclosure = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [apiLoading, setApiLoading] = useState(true);
-  const [basketData, setBasketData] = useState(null);
+  // const [basketData, setBasketData] = useState(null);
   const token = Cookies.get("login_token_client");
   const dispatch = useDispatch();
+
+
+  const { isLoading, newInstrumentsData, basketData } = useSelector(
+    (store) => store.basketReducer
+  );
 
   const goBack = () => {
     navigate(`/basket/${id}`);
   };
 
   useEffect(() => {
-    if (id != null) {
-      dispatch(getBasketDetails(id, token))
-        .then((res) => {
-          if (res.data.status === "success") {
-            setApiLoading(false);
-            setBasketData(res.data.data.basketList[0]);
-          }
-        })
-        .catch((error) => {
-          setApiLoading(false);
-          console.log(error, "Get Basket Disclosure Error");
-        });
-    }
-  }, [id, token]);
+    dispatch(getBasketDetails(id, token));
+  }, [id, token, dispatch]);
 
   return (
     <Box
@@ -46,7 +39,7 @@ const Disclosure = () => {
       width="100%"
       height="auto"
     >
-      {apiLoading ? (
+      {Object.keys(basketData).length === 0 ? (
         <Flex justify="center" align="center" height="100vh">
           <Loader  />
         </Flex>

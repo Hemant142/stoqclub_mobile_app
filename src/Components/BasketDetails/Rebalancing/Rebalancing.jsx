@@ -1,10 +1,15 @@
-import { Box, Button, Flex, Icon, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { BsArrowUpRightCircle } from 'react-icons/bs';
+import Cookies from "js-cookie";
+import { RebalancingNewOrder } from '../../../Redux/basketReducer/action';
+import { useDispatch } from 'react-redux';
 
-export default function Rebalancing({ rebalancingList }) {
+export default function Rebalancing({ rebalancingList,id ,RebalancingSuccess}) {
     const [timeRemaining, setTimeRemaining] = useState(null);
-
+    const token = Cookies.get("login_token_client");
+    const dispatch = useDispatch();
+    const toast = useToast();
     useEffect(() => {
       if (rebalancingList.length > 0) {
         // Sort the rebalancing list by statusDate to find the last (most recent) one
@@ -38,6 +43,10 @@ export default function Rebalancing({ rebalancingList }) {
       }
     }, [rebalancingList]);
 
+
+
+   
+
   const handleUpsidePotentialPercentage = (instrumentListData) => {
     const cmp = Number(instrumentListData.currentPrice);
     const takeProfit = Number(instrumentListData.takeProfit);
@@ -58,7 +67,39 @@ export default function Rebalancing({ rebalancingList }) {
 
 
   const handleRebalancing=()=>{
+  
+      dispatch(RebalancingNewOrder(id,token))
+      .then((res)=>{
+        console.log(res)
+        if(res.data.detail){
+          RebalancingSuccess()
+          toast({
+            title: res.data.detail,
+            position: "bottom",
+            status: "warning",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
 
+        if(res.data.status=="success"){
+          RebalancingSuccess()
+          toast({
+            title: res.data.message,
+            position: "bottom",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          });
+        }
+
+
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+        
+    
   }
 
   return (
@@ -235,6 +276,7 @@ export default function Rebalancing({ rebalancingList }) {
             boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
             transform: "scale(0.95)",
           }}
+          onClick={handleRebalancing}
         >
           Rebalancing
         </Button>

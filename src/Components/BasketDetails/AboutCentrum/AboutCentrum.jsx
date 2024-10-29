@@ -3,6 +3,7 @@ import { Box, Heading, Text, Link } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 export default function AboutCentrum({ basketData, id }) {
+
   return (
     <Box p={4} mt={2}>
       <Box

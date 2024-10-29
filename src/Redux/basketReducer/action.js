@@ -45,7 +45,7 @@ export const getBasketDetails = (id,token) => (dispatch) => {
     }
   )
   .then((res) => {
-          
+          console.log(res,"response")
     if (res.data.status === "success") {
      
         dispatch({ type: GET_BASKETDATA_SUCCESS,payload: res.data.data.basketList[0]});
@@ -134,3 +134,16 @@ export const OrderPlaced = (id, lot, token) => (dispatch) => {
     }
   );
 };
+
+
+export const RebalancingNewOrder=(id,token)=>(dispatch)=>{
+  return axios.post(
+    `${NewURL}app/client/rebalance-new-order?basketId=${id}`,
+    {}, // Add an empty object as the body payload
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass Bearer token for authentication
+      },
+    }
+  );
+}
