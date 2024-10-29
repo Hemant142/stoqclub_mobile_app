@@ -18,12 +18,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { AiOutlineMore } from "react-icons/ai";
 import { GiExitDoor } from "react-icons/gi";
+import { basket_order_exit } from "../../../Redux/basketReducer/action";
+import { useDispatch } from "react-redux";
 
 
 const InvestmentSection = (props) => {
   const toast = useToast();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  
   const minReqAmt = parseInt(props.minReq);
   const currentBalance = parseInt(props.currentBalance);
   const instrumentList = props.instrumentList; // Keep instrumentList as an array, no need to parse it
@@ -35,6 +38,7 @@ const InvestmentSection = (props) => {
   const [amountToInvest, setAmountToInvest] = useState(minReqAmt);
   const [lots, setLots] = useState(1); // Initial lot size as 1
   const [apiLoader, setApiLoader] = useState(false);
+  const token = Cookies.get("login_token_client");
 
   console.log(orderHistory, "orderHistory");
   const handleInvestClick = () => {
@@ -168,6 +172,40 @@ const InvestmentSection = (props) => {
     // }
   };
 
+
+
+  const handleExitBasket=()=>{
+    dispatch(basket_order_exit(basketId, token))
+    .then((res) => {
+      console.log(res, "handleExitBasket");
+      
+      // Show success toast notification
+      if(res.data.status==="success"){
+
+        toast({
+          title: "Exit Successful",
+          description: "The basket has been exited successfully.",
+          status: "success",
+          duration: 3000,  // Toast duration in milliseconds
+          isClosable: true,
+        });
+        
+      }
+    })
+    .catch((error) => {
+      console.log(error, "handleExitBasket Error");
+
+      // Show error toast notification
+      toast({
+        title: "Exit Failed",
+        description: "There was an error exiting the basket.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    });
+  }
+
   return (
     <Box
       className="investment-section"
@@ -250,7 +288,7 @@ const InvestmentSection = (props) => {
                 boxShadow: "0 0 15px #C12126",
                 transform: "scale(0.95)",
               }}
-              // onClick={handleMenuClick} // Replace with actual menu click handler
+              onClick={handleExitBasket} // Replace with actual menu click handler
             />
           </Box>
           )}

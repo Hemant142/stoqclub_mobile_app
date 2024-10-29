@@ -128,6 +128,7 @@ console.log(isRebalancing,"isRebalancing")
   useEffect(() => {
     const now = new Date(); // Get the current date and time
   
+    // Filter instruments within the last 12 hours and not present in orderHistory
     const filteredRebalancingList = newInstrumentsData.filter((newInstrument) => {
       const statusDate = new Date(newInstrument.statusDate); // Convert statusDate to a Date object
   
@@ -139,13 +140,11 @@ console.log(isRebalancing,"isRebalancing")
       // Check if the statusDate is within the last 12 hours
       const isWithin12Hours = now - statusDate <= 12 * 60 * 60 * 1000; // 12 hours in milliseconds
   
-      if (isWithin12Hours && isNotInOrderHistory) {
-        setIsRebalancing(true); // Set rebalancing if within 12 hours and not in orderHistory
-        return true;
-      }
-      setIsRebalancing(false);
-      return false;
+      return isWithin12Hours && isNotInOrderHistory;
     });
+  
+    // Update the isRebalancing state if any items match the criteria
+    setIsRebalancing(filteredRebalancingList.length > 0);
   
     // Loop through orderHistory to include only necessary entries in rebalancing list
     orderHistory.forEach((order) => {
@@ -159,20 +158,32 @@ console.log(isRebalancing,"isRebalancing")
       );
   
       // If both entry and exit exist, include only the exit in rebalancing
-      if (entryOrder && exitOrder && !filteredRebalancingList.some(item => item.instrument === exitOrder.instrument)) {
+      if (
+        entryOrder &&
+        exitOrder &&
+        !filteredRebalancingList.some(
+          (item) => item.instrument === exitOrder.instrument
+        )
+      ) {
         filteredRebalancingList.push(exitOrder);
-      } 
+      }
       // If only entry exists, include it if it's not already in filteredRebalancingList
-      else if (entryOrder && !exitOrder && !filteredRebalancingList.some(item => item.instrument === entryOrder.instrument)) {
+      else if (
+        entryOrder &&
+        !exitOrder &&
+        !filteredRebalancingList.some(
+          (item) => item.instrument === entryOrder.instrument
+        )
+      ) {
         filteredRebalancingList.push(entryOrder);
       }
     });
   
-    // console.log(filteredRebalancingList,"filteredRebalancingList")
     // Update the rebalancing list state with the filtered instruments
     setRebalancingList(filteredRebalancingList);
   }, [newInstrumentsData, orderHistory, basketData.instrumentList, isRebalancingSuccess]);
   
+
 console.log(rebalancingList,"Rebalincing List")
   // Function to generate last 6 months data for both Basket and Underlying Index
   const generateLast6MonthsData = () => {
@@ -306,7 +317,7 @@ console.log(rebalancingList,"Rebalincing List")
                 orderHistory={orderHistory}
               />
 
-              {orderHistory.length>0 ||rebalancingList.length > 0 ||isRebalancing   ? (
+              {orderHistory.length>0 &&rebalancingList.length > 0 &&isRebalancing   ? (
                 <Box>
                   <Divider
                     ml={2}

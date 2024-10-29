@@ -147,3 +147,18 @@ export const RebalancingNewOrder=(id,token)=>(dispatch)=>{
     }
   );
 }
+
+
+
+
+export const basket_order_exit=(id,token)=>(dispatch)=>{
+  return axios.post(
+    `${NewURL}app/client/create-exit-order?basketId=${id}`,
+    {}, // Add an empty object as the body payload
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass Bearer token for authentication
+      },
+    }
+  );
+}
