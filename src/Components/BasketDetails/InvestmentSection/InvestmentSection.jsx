@@ -10,6 +10,10 @@ import {
   Flex,
   Icon,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import moment from "moment";
 import axios from "axios";
@@ -39,8 +43,9 @@ const InvestmentSection = (props) => {
   const [lots, setLots] = useState(1); // Initial lot size as 1
   const [apiLoader, setApiLoader] = useState(false);
   const token = Cookies.get("login_token_client");
+  const userId=Cookies.get("userId_client")
 
-  console.log(orderHistory, "orderHistory");
+  console.log(userId, "userId");
   const handleInvestClick = () => {
     setShowInvestmentOptions(true);
     setAmountToInvest(minReqAmt); // Reset amount to minimum requirement
@@ -179,6 +184,17 @@ const InvestmentSection = (props) => {
     .then((res) => {
       console.log(res, "handleExitBasket");
       
+      if(res.data.detail==="There is no order to exit"){
+        toast({
+          title: "Warning",
+          description: "There is no order to exit",
+          status: "warning",
+          duration: 3000,  // Toast duration in milliseconds
+          isClosable: true,
+        });
+        navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+
+      }
       // Show success toast notification
       if(res.data.status==="success"){
 
@@ -189,7 +205,8 @@ const InvestmentSection = (props) => {
           duration: 3000,  // Toast duration in milliseconds
           isClosable: true,
         });
-        
+        navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+
       }
     })
     .catch((error) => {
@@ -269,27 +286,58 @@ const InvestmentSection = (props) => {
               Invest More
             </Button>
           
-            {/* Updated Icon Button with FiMoreHorizontal for 3-dot menu */}
-            <IconButton
-              icon={<GiExitDoor />}
-              aria-label="Menu"
-              width="40px"
-              height="60px"
-              fontSize="38px"
-              color="#DB4437"
-              border="1px solid #DB4437"
-              variant="outline"
-              borderRadius="md" // Makes the button circular
-              _hover={{
-                boxShadow: "0 0 10px #C12126",
-                transform: "scale(1.05)",
-              }}
-              _active={{
-                boxShadow: "0 0 15px #C12126",
-                transform: "scale(0.95)",
-              }}
-              onClick={handleExitBasket} // Replace with actual menu click handler
-            />
+            {/* IconButton with Enhanced Menu for "Exit Basket" */}
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                icon={<AiOutlineMore />}
+                aria-label="Menu"
+                width="40px"
+                height="60px"
+                fontSize="38px"
+                color="#1DD75B"
+                border="1px solid #1DD75B"
+                variant="outline"
+                borderRadius="md"
+                _hover={{
+                  boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+                  transform: "scale(1.05)",
+                }}
+                _active={{
+                  boxShadow: "0 0 15px #1DD75B",
+                  transform: "scale(0.95)",
+                }}
+              />
+              <MenuList
+                bg="white"
+                border="1px solid #E2E8F0"
+                borderRadius="md"
+                boxShadow="lg"
+                py={2}
+                minW="160px"
+              >
+                <MenuItem
+                  color="#C12126"
+                  fontWeight="semibold"
+                  iconSpacing={3}
+                  _hover={{
+                    bg: "#FFF5F5",
+                    color: "#C12126",
+                    fontWeight: "bold",
+                    // transform: "scale(1.05)",
+                  }}
+                  _active={{
+                    bg: "#FED7D7",
+                  }}
+                  _focus={{
+                    // boxShadow: "0 0 5px rgba(193, 33, 38, 0.7)",
+                  }}
+                  onClick={handleExitBasket}
+                >
+                  Exit Basket
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
           )}
         </Flex>
