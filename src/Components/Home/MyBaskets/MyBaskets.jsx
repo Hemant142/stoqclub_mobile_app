@@ -19,7 +19,7 @@ const MyBaskets = ({ userInfo }) => {
 
   return (
     <section className="my-baskets" bg="darkBackground" alignItems={"left"}>
-      <Heading size="lg" mb={4}>
+      <Heading size="lg" mb={4} fontFamily={"Helvetica"}>
         My Baskets
       </Heading>
       {userInfo.myBaskets && userInfo.myBaskets.length > 0 ? (
@@ -72,6 +72,7 @@ const MyBaskets = ({ userInfo }) => {
                   <Text
                     fontSize={{ base: "12px", md: "14px" }} // Smaller font size for mobile
                     fontWeight="medium"
+                     fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                     color={bskt.returnsFlag === "red" ? "red.500" : "#1DD75B"}
                   >
                     {bskt.avrageReturns}

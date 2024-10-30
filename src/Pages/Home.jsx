@@ -95,7 +95,7 @@ export default function Home() {
             >
               <Heading
                 as="h2"
-                fontFamily="Inter"
+                fontFamily={"Helvetica"}
                 fontSize="30px"
                 fontWeight="normal"
                 color="white"

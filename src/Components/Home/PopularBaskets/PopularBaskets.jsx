@@ -41,7 +41,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
         fontWeight="500"
         mb="1.4rem"
         textAlign="left"
-        fontFamily={"Epilogue"}
+        fontFamily={"Helvetica"}
       >
         Most Trending Baskets
       </Heading>
@@ -99,7 +99,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
 
                 <Box mt={3}>
                   <Text
-                    fontFamily={"Epilogue"}
+                     fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                     fontSize="14px"
                     fontWeight="normal"
                     whiteSpace="nowrap"
@@ -112,7 +112,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
 
                   {/* Returns Percentage */}
                   <Text
-                    fontFamily={"Epilogue"}
+                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                     fontSize="sm"
                     fontWeight="normal"
                     color={

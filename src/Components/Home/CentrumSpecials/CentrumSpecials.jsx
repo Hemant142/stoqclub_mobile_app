@@ -31,7 +31,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
           as="h4"
           size={{ base: "md", md: "lg" }} // Responsive heading size
           color="white"
-          fontFamily={"Epilogue"}
+          fontFamily={"Helvetica"}
           fontWeight="normal"
         >
           Centrum Specials
@@ -39,7 +39,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
         <Image src={Stars} alt="Stars" boxSize={{ base: "24px", md: "28px" }} />
       </HStack>
       <Text
-        fontFamily={"Epilogue"}
+        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
         color="rgba(144, 149, 160, 1)"
         fontSize={{ base: "sm", md: "md" }} // Responsive text size
         fontWeight="300"
@@ -81,7 +81,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                       mb={3}
                       isTruncated
                       fontWeight="normal"
-                      fontFamily={"Epilogue"}
+                      fontFamily={"Helvetica"}
                       borderBottom="1px solid #BCC1CA"
                     >
                       {truncateTitle(bskt.title)}
@@ -95,7 +95,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                     fontSize={{ base: "xs", md: "sm" }} // Responsive text size
                     mb={10}
                     noOfLines={3}
-                    fontFamily={"Epilogue"}
+                  fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                   >
                     {bskt.description}
                   </Text>
