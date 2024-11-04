@@ -1,9 +1,16 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Tooltip } from '@chakra-ui/react';
 // import ArrowIcon from './ArrowIcon';
 // import PercentageChange from './PercentageChange';
 import { Badge } from '@chakra-ui/react';
 import ArrowIcon from './ArrowIcon';
 import PercentageChange from './PercentageChange';
+
+ 
+const getPreviousMonth = ()=>{
+  const date =new Date ();
+  date.setMonth(date.getMonth() -1); 
+  return date.toLocaleString('en-US', {month: 'short'})
+}
 
 const BasketHeader = ({ basketData }) => {
   return (
@@ -24,6 +31,7 @@ const BasketHeader = ({ basketData }) => {
       fontFamily={"Arial, Helvetica, sans-serif"}
     //   fontWeight={"normal"}
     >
+      <Tooltip label={basketData.title} fontSize="md" gap={2}  hasArrow>
       <Heading
         fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
         color="rgba(23, 26, 31, 1)"
@@ -35,6 +43,7 @@ const BasketHeader = ({ basketData }) => {
       >
         {basketData.title}
       </Heading>
+      </Tooltip>
       <ArrowIcon monthProfitFlag={basketData.monthProfitFlag} />
       <PercentageChange
         monthProfitFlag={basketData.monthProfitFlag} 
@@ -53,7 +62,7 @@ const BasketHeader = ({ basketData }) => {
         marginRight={2}
       >
         {/* {basketData.month} */}
-        sep
+       {getPreviousMonth()}
       </Badge>
     </Flex>
   );

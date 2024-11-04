@@ -25,7 +25,6 @@ export default function Home() {
 
   const token = Cookies.get("login_token_client");
 
-
   //  Cookies.set("user2Id_client", userId);
   let userDetails = useSelector((store) => store.authReducer.userdata);
   let Allbaskets = useSelector((store) => store.basketReducer);
@@ -35,13 +34,9 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getAllBaskets(token));
-    dispatch(fetchSymbols(token))
-  
+    dispatch(fetchSymbols(token));
 
-      dispatch(getBalance(token))
-
-  
-    
+    dispatch(getBalance(token));
   }, [dispatch, token]);
 
   useEffect(() => {
@@ -71,7 +66,6 @@ export default function Home() {
     }
   }, [userDetails]); //
 
-
   return (
     <Box>
       {Object.keys(userDetails).length === 0 ? (
@@ -82,7 +76,8 @@ export default function Home() {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            p={2}
+          
+            // p={2}
             mb={10}
 
             // width="100%" // Ensures the box takes full width
@@ -90,6 +85,7 @@ export default function Home() {
             <Box
               display="flex"
               alignItems="center"
+              
 
               // width="50%" // Adjust as needed for how much space you want the name to take
             >

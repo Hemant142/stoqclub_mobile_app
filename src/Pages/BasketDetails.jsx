@@ -247,7 +247,7 @@ console.log(rebalancingList,"Rebalincing List")
   };
 
 
-
+console.log(basketData,"Basket DAta")
 
   return (
     <Box>

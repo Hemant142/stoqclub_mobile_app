@@ -58,7 +58,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
 
   return (
     <Box className="basket-constituents" p={4} >
-      <Text fontSize="lg" fontWeight="bold" mb={4} fontFamily={"Helvetica"}>
+      <Text fontSize="md" fontWeight="bold" mb={4} fontFamily={"Helvetica"}>
         Basket Constituents & Weights
       </Text>
 
@@ -87,7 +87,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
               boxShadow="md"
             >
               <Flex justify="space-between" align="center">
-                <Flex align="center">
+                <Flex align="center" >
                   <Icon
                    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                    
@@ -104,7 +104,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
                     } // Adjust this if needed
                     mr={2}
                   />
-                  <Text fontSize="lg" fontWeight="semibold" 
+                  <Text fontSize="lg" fontWeight="500" 
                     //  fontSize="lg"
                     //  fontWeight="500"
                      lineHeight="24px"

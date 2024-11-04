@@ -9,11 +9,13 @@ import {
   Icon,
   Tooltip,
   Flex,
+  Divider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import Stars from "../../../Assets/stars.png";
 import SectionLoader from "../../Loader/SectionLoader";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
   // Function to limit the title length
@@ -24,7 +26,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
   };
 
   return (
-    <Box textAlign="left" mx="auto" mb={6} p={2} boxShadow="xl">
+    <Box textAlign="left" mx="auto"  mb={6}  boxShadow="xl">
       {/* Heading Section */}
       <HStack spacing={2} mb={4} fontFamily={"Epilogue"}>
         <Heading
@@ -49,11 +51,11 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
       </Text>
 
       {/* Basket Cards Slider Section */}
-      <Box overflowX="auto" mb={4}>
+      <Box overflowX="auto"   mb={4}>
         {allBasketsApiLoading ? (
           <SectionLoader />
         ) : allBaskets.filter((allBskt) => allBskt.specialBasket).length > 0 ? (
-          <Flex as="div" gap={6} wrap="nowrap" overflowX="auto" px={2}>
+          <Flex as="div" gap={4} wrap="nowrap" overflowX="auto" >
             {allBaskets
               .filter((allBskt) => allBskt.specialBasket)
               .map((bskt, index) => (
@@ -61,11 +63,11 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                   textAlign={"left"}
                   fontFamily={"Epilogue"}
                   key={`spbskt_${index}`}
-                  minWidth={{ base: "85%", sm: "65%", md: "45%" }} // Responsive card width
+                  minWidth={{ base: "70%", sm: "60%", md: "40%" }} // Responsive card width
                   bg="rgba(38, 42, 51, 1)"
                   border="1px solid rgba(86, 94, 108, 1)"
                   borderRadius="12px"
-                  p={6}
+                  p={4}
                   position="relative"
                   color="white"
                   transition="transform 0.3s, box-shadow 0.3s"
@@ -74,26 +76,37 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                   }}
                 >
                   {/* Truncated Title with Tooltip for Full Title */}
-                  <Tooltip label={bskt.title} fontSize="md" hasArrow>
+                  <Tooltip label={bskt.title} fontSize="md" gap={2}  hasArrow>
                     <Heading
                       as="h3"
+                  
                       size={{ base: "sm", md: "md" }} // Responsive heading size
                       mb={3}
                       isTruncated
                       fontWeight="normal"
                       fontFamily={"Helvetica"}
-                      borderBottom="1px solid #BCC1CA"
+                      // borderBottom="1px solid #BCC1CA"
                     >
                       {truncateTitle(bskt.title)}
                     </Heading>
                   </Tooltip>
+                  <Divider
+                  // ml={2}
+                  // mr={2}
+                  mb= {2}
+                  // m="auto"
+                  width="60%" // Sets the width
+                  border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                  position="relative"
+                />
 
                   {/* Description */}
                   <Text
+                
                     fontWeight="normal"
                     color="rgba(222, 225, 230, 1)"
                     fontSize={{ base: "xs", md: "sm" }} // Responsive text size
-                    mb={10}
+                    mb={12}
                     noOfLines={3}
                   fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                   >
@@ -105,6 +118,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                     <Button
                       position="absolute"
                       bottom={4}
+                    
                       right={4}
                       color={"#1DD75B"}
                       border={"1px solid #1DD75B"}
@@ -119,7 +133,7 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
                         transform: "scale(0.95)",
                       }}
                     >
-                      <Icon as={ArrowForwardIcon} w={3} h={4} />
+                      <Icon as={FaArrowRightLong} w={3} h={4} />
                     </Button>
                   </Link>
                 </Box>

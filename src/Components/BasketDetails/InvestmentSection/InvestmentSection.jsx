@@ -14,8 +14,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Heading,
 } from "@chakra-ui/react";
 import moment from "moment";
+import { BiLike } from "react-icons/bi";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,12 +27,11 @@ import { GiExitDoor } from "react-icons/gi";
 import { basket_order_exit } from "../../../Redux/basketReducer/action";
 import { useDispatch } from "react-redux";
 
-
 const InvestmentSection = (props) => {
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const minReqAmt = parseInt(props.minReq);
   const currentBalance = parseInt(props.currentBalance);
   const instrumentList = props.instrumentList; // Keep instrumentList as an array, no need to parse it
@@ -42,10 +43,11 @@ const InvestmentSection = (props) => {
   const [amountToInvest, setAmountToInvest] = useState(minReqAmt);
   const [lots, setLots] = useState(1); // Initial lot size as 1
   const [apiLoader, setApiLoader] = useState(false);
+  const [showExitButton, setShowExitButton] = useState(false);
   const token = Cookies.get("login_token_client");
-  const userId=Cookies.get("userId_client")
+  
 
-  console.log(userId, "userId");
+  console.log(showExitButton, "showExitButton");
   const handleInvestClick = () => {
     setShowInvestmentOptions(true);
     setAmountToInvest(minReqAmt); // Reset amount to minimum requirement
@@ -140,6 +142,7 @@ const InvestmentSection = (props) => {
     } else {
       // Pass lot and amount to the Confirm Order page
       Cookies.set("lots", lots);
+      Cookies.set("basket-state", "Invest");
       navigate(`/confirm-order/${basketId}`, {
         state: {
           lots: lots,
@@ -177,51 +180,23 @@ const InvestmentSection = (props) => {
     // }
   };
 
+  const handleExitBasketClick = () => {
 
-
-  const handleExitBasket=()=>{
-    dispatch(basket_order_exit(basketId, token))
-    .then((res) => {
-      console.log(res, "handleExitBasket");
-      
-      if(res.data.detail==="There is no order to exit"){
-        toast({
-          title: "Warning",
-          description: "There is no order to exit",
-          status: "warning",
-          duration: 3000,  // Toast duration in milliseconds
-          isClosable: true,
-        });
-        navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
-
-      }
-      // Show success toast notification
-      if(res.data.status==="success"){
-
-        toast({
-          title: "Exit Successful",
-          description: "The basket has been exited successfully.",
-          status: "success",
-          duration: 3000,  // Toast duration in milliseconds
-          isClosable: true,
-        });
-        navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
-
-      }
-    })
-    .catch((error) => {
-      console.log(error, "handleExitBasket Error");
-
-      // Show error toast notification
-      toast({
-        title: "Exit Failed",
-        description: "There was an error exiting the basket.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+    Cookies.set("lots", lots);
+    Cookies.set("basket-state", "Exit");
+    navigate(`/confirm-order/${basketId}`, {
+      state: {
+        lots: lots,
+        currentBalance: currentBalance,
+        amountToInvest: amountToInvest,
+        basketId: props.id,
+        basketName: props.basketName, // In case you want to pass the basket name too
+        instrumentList: props.instrumentList,
+      },
     });
+
   }
+ 
 
   return (
     <Box
@@ -231,74 +206,27 @@ const InvestmentSection = (props) => {
       // borderRadius="lg"
       // boxShadow="lg"
     >
-      {!showInvestmentOptions && (
-        <Flex justifyContent={"space-between"} alignItems={"center"}>
-          <Text
-            fontFamily="Inter"
-            fontSize="14px"
-            color={"#A7ADB7"}
-            fontWeight="normal"
-            lineHeight="22px"
-            textAlign="left"
-          >
-            Invest for your future
-          </Text>
-          {orderHistory === 0 ? (
-            <Button
-              width="136px"
-              height="60px"
-              padding="12px 21px 12px 20px"
-              color={"#1DD75B"}
-              border={"1px solid #1DD75B"}
-              variant="outline"
-              _hover={{
-                boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
-                transform: "scale(1.05)",
-              }}
-              _active={{
-                boxShadow: "0 0 15px #1DD75B",
-                transform: "scale(0.95)",
-              }}
-              onClick={handleInvestClick}
+      {!showInvestmentOptions &&
+        (showExitButton ===false ? (
+          <Flex justifyContent={"space-between"} alignItems={"center"}>
+            <Text
+              fontFamily="Inter"
+              fontSize="14px"
+              color={"#A7ADB7"}
+              fontWeight="normal"
+              lineHeight="22px"
+              textAlign="left"
             >
-              Invest Now
-            </Button>
-          ) : (
-            <Box display="flex" gap={2}>
-            {/* Main Invest Now Button */}
-            <Button
-              width="136px"
-              height="60px"
-              padding="12px 21px"
-              color="#1DD75B"
-              border="1px solid #1DD75B"
-              variant="outline"
-              _hover={{
-                boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
-                transform: "scale(1.05)",
-              }}
-              _active={{
-                boxShadow: "0 0 15px #1DD75B",
-                transform: "scale(0.95)",
-              }}
-              onClick={handleInvestClick}
-            >
-              Invest More
-            </Button>
-          
-            {/* IconButton with Enhanced Menu for "Exit Basket" */}
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={<AiOutlineMore />}
-                aria-label="Menu"
-                width="40px"
+              Invest for your future
+            </Text>
+            {orderHistory === 0 ? (
+              <Button
+                width="136px"
                 height="60px"
-                fontSize="38px"
-                color="#1DD75B"
-                border="1px solid #1DD75B"
+                padding="12px 21px 12px 20px"
+                color={"#1DD75B"}
+                border={"1px solid #1DD75B"}
                 variant="outline"
-                borderRadius="md"
                 _hover={{
                   boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
                   transform: "scale(1.05)",
@@ -307,41 +235,181 @@ const InvestmentSection = (props) => {
                   boxShadow: "0 0 15px #1DD75B",
                   transform: "scale(0.95)",
                 }}
-              />
-              <MenuList
-                bg="white"
-                border="1px solid #E2E8F0"
-                borderRadius="md"
-                boxShadow="lg"
-                py={2}
-                minW="160px"
+                onClick={handleInvestClick}
               >
-                <MenuItem
-                  color="#C12126"
-                  fontWeight="semibold"
-                  iconSpacing={3}
+                Invest Now
+              </Button>
+            ) : (
+              <Box display="flex" gap={2}>
+                {/* Main Invest Now Button */}
+                <Button
+                  width="136px"
+                  height="60px"
+                  padding="12px 21px"
+                  color="#1DD75B"
+                  border="1px solid #1DD75B"
+                  variant="outline"
                   _hover={{
-                    bg: "#FFF5F5",
-                    color: "#C12126",
-                    fontWeight: "bold",
-                    // transform: "scale(1.05)",
+                    boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+                    transform: "scale(1.05)",
                   }}
                   _active={{
-                    bg: "#FED7D7",
+                    boxShadow: "0 0 15px #1DD75B",
+                    transform: "scale(0.95)",
                   }}
-                  _focus={{
-                    // boxShadow: "0 0 5px rgba(193, 33, 38, 0.7)",
-                  }}
-                  onClick={handleExitBasket}
+                  onClick={handleInvestClick}
                 >
-                  Exit Basket
-                </MenuItem>
-              </MenuList>
-            </Menu>
+                  Invest More
+                </Button>
+                <IconButton
+                  icon={<AiOutlineMore />}
+                  aria-label="Menu"
+                  width="40px"
+                  height="60px"
+                  fontSize="38px"
+                  color="#1DD75B"
+                  border="1px solid #1DD75B"
+                  variant="outline"
+                  borderRadius="md"
+                  _hover={{
+                    boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+                    transform: "scale(1.05)",
+                  }}
+                  _active={{
+                    boxShadow: "0 0 15px #1DD75B",
+                    transform: "scale(0.95)",
+                  }}
+                  onClick={() => setShowExitButton(true)} // Optional: if you want a function to execute on click
+                />
+              </Box>
+            )}
+          </Flex>
+        ) : (
+          <Box
+            width="351px"
+            height="264px"
+            borderRadius="6px"
+            border="1px solid #323842"
+            background="#262A33"
+            p={4}
+          >
+     <Box display="flex" alignItems="center" gap="12px" mt={4} mb={4} ml={8} mr={8}>
+  <Heading
+    as="h2"
+    fontFamily="Epilogue"
+    fontSize="20px"
+    fontWeight="700"
+    lineHeight="28px"
+    textAlign="left"
+    color="#DEE1E6"
+  >
+    Exit
+  </Heading>
+  <Heading
+  as="h2"
+  fontFamily="Epilogue"
+  fontSize="20px"
+  fontWeight="700"
+  lineHeight="28px"
+  textAlign="left"
+  color="#DEE1E6"
+>
+  ₹ {minReqAmt.toLocaleString('en-IN')}
+</Heading>
+
+</Box>
+<Box display="flex" alignItems="center" gap={2}  height="22px">
+  <BiLike
+    size="26px" // Increased size for the icon
+    color="#1DD75B"
+    style={{
+      width: "26px", // Adjusted width to match increased size
+      height: "26px", // Adjusted height for consistency
+      marginRight: "8px", // Spacing between icon and text
+    }}
+  />
+  <Text
+    fontFamily="Inter"
+    fontSize="15px"
+    fontWeight="400"
+    lineHeight="22px"
+    textAlign="left"
+    color="#DEE1E6"
+  >
+    Stay Invested & continue to compound
+  </Text>
+</Box>
+
+
+<Box display="flex" alignItems="center" mt={4} gap={2} >
+  <Box
+    width="40px" // Increased width
+    height="40px" // Increased height
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <BiLike color="#1DD75B" style={{ width: "100%", height: "100%" }} />
+  </Box>
+  <Text
+    fontFamily="Inter"
+    fontSize="15px"
+    fontWeight="400"
+    lineHeight="22px"
+    textAlign="left"
+    color="#DEE1E6"
+  >
+    30% of our users compounded their money by staying invested
+  </Text>
+</Box>
+
+
+<Box display="flex" alignItems="center" mt={4} gap={4} >
+  <Button
+    width="150px" // Increased width for larger button
+    height="50px" // Increased height for larger button
+    color="#1DD75B"
+    border="1px solid #1DD75B"
+    variant="outline"
+    _hover={{
+      boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+      transform: "scale(1.05)",
+    }}
+    _active={{
+      boxShadow: "0 0 15px #1DD75B",
+      transform: "scale(0.95)",
+    }}
+    onClick={() => setShowExitButton(false)}
+  >
+    Return
+  </Button>
+
+  <Button
+    width="150px" // Increased width for larger button
+    height="50px" // Increased height for larger button
+    color="#E77E7E"
+    border="1px solid #E77E7E"
+    variant="outline"
+    _hover={{
+      boxShadow: "0 0 10px #E77E7E",
+      transform: "scale(1.05)",
+    }}
+    _active={{
+      boxShadow: "0 0 15px #E77E7E",
+      transform: "scale(0.95)",
+    }}
+    onClick={handleExitBasketClick}
+  >
+    Exit basket
+  </Button>
+</Box>
+
+
+
+
+
           </Box>
-          )}
-        </Flex>
-      )}
+        ))}
       {showInvestmentOptions && (
         <>
           <Text

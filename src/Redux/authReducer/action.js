@@ -48,7 +48,7 @@ export const getUserInfo=(userId)=>(dispatch)=>{
   dispatch({ type: USER_LOADING });
   axios.get(`${URL}get-balance/v2?user_id=${userId}`)
   .then((res)=>{
-
+console.log(res,"response")
     if(res.data.status==="SUCCESS"){
       dispatch({type:USER_LOGIN_SUCCESS, payload:res.data.data})
     }

@@ -11,6 +11,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const MyBaskets = ({ userInfo }) => {
   if (userInfo.firstTimeClient) {
@@ -18,8 +19,8 @@ const MyBaskets = ({ userInfo }) => {
   }
 
   return (
-    <section className="my-baskets" bg="darkBackground" alignItems={"left"}>
-      <Heading size="lg" mb={4} fontFamily={"Helvetica"}>
+    <section className="my-baskets" bg="darkBackground" alignItems={"left"} >
+      <Heading size="lg" mb={4} fontFamily={"Helvetica"} >
         My Baskets
       </Heading>
       {userInfo.myBaskets && userInfo.myBaskets.length > 0 ? (
@@ -56,7 +57,7 @@ const MyBaskets = ({ userInfo }) => {
                 </Box>
 
                 {/* Responsive Flex for Title and Returns */}
-                <Flex flexDirection="row" flexGrow={1} mr={2} gap={2}>
+                <Flex flexDirection="row" flexGrow={1} mr={2} gap={4}>
                   {" "}
                   {/* Change to row and add gap */}
                   <Heading
@@ -65,8 +66,8 @@ const MyBaskets = ({ userInfo }) => {
                     fontSize={{ base: "14px", md: "16px" }} // Adjusts font size for mobile and larger screens
                     fontWeight="bold"
                   >
-                    {bskt.title.length > 15
-                      ? `${bskt.title.slice(0, 15)}...`
+                    {bskt.title.length > 10
+                      ? `${bskt.title.slice(0, 10)}...`
                       : bskt.title}
                   </Heading>
                   <Text
@@ -99,14 +100,14 @@ const MyBaskets = ({ userInfo }) => {
                   p={{ base: 1, md: 2 }} // Adjust padding for mobile
                   fontSize={{ base: "12px", md: "16px" }} // Adjust button icon size
                 >
-                  <Icon as={ArrowForwardIcon} w={3} h={4} />
+                  <Icon as={FaArrowRightLong} w={4} h={3} />
                 </Button>
               </Flex>
             </Link>
           ))}
         </Stack>
       ) : (
-        <Text className="no_data_box">No Baskets Available</Text>
+        <Text mb={4} className="no_data_box">No Baskets Available</Text>
       )}
     </section>
   );

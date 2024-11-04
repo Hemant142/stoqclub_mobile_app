@@ -55,7 +55,7 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
             color="rgba(255, 255, 255, 1)"
             marginLeft={1} // Space between Rupee symbol and value
           >
-            {minAmount.toLocaleString('en-IN')}
+            {minAmount !==undefined ?minAmount.toLocaleString('en-IN'):0}
           
           </Heading>
         </Flex>
@@ -94,7 +94,7 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
             marginTop={1}
           >
             {/* 87% */}
-            {upsidePotential} ({upsidePotentialPercentage}%)
+            {upsidePotential.toLocaleString('en-IN')} ({upsidePotentialPercentage}%)
             {/* {basketData.CAGR} */}
             {/* 2,000 (20%) */}
           </Heading>

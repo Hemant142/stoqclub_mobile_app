@@ -35,7 +35,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
   }
 
   return (
-    <Box width="100%" mx="auto" mt="5%" alignItems={"left"} p={2}>
+    <Box width="100%" mx="auto"  mt="5%" alignItems={"left"} >
       <Heading
         fontSize="20px"
         fontWeight="500"
@@ -74,8 +74,8 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
               style={{ textDecoration: "none" }}
             >
               <Box
-                width="95px"
-                height="112px"
+                width="100px"
+                height="122px"
                 bg="rgba(38, 42, 51, 1)"
                 textAlign="center"
                 borderRadius="8px"
@@ -83,7 +83,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
                 border="1px solid rgba(86, 94, 108, 1)"
                 color="white"
                 fontFamily={"Epilogue"}
-                p={2}
+                p={1}
               >
                 {/* Basket Icon */}
                 <Image

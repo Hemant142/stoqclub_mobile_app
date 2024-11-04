@@ -13,10 +13,11 @@ import {
 import { CheckIcon } from "@chakra-ui/icons"; // Chakra's built-in check icon
 import { FaCaretUp, FaCaretDown } from "react-icons/fa"; // For the caret icons
 import { CiCircleCheck } from "react-icons/ci";
+import { FaRegCircleCheck } from "react-icons/fa6";
 
 function AccountOverview({ userInfo }) {
   return userInfo.firstTimeClient ? (
-    <Box mb={8}>
+    <Box mb={8} >
       <Box
         bg="#262A33"
         border="1px"
@@ -26,7 +27,7 @@ function AccountOverview({ userInfo }) {
         mb={8}
       >
         <Heading
-         fontFamily={"Helvetica"}
+          fontFamily={"Helvetica"}
           fontSize="20px"
           fontWeight="normal"
           lineHeight="30px"
@@ -54,30 +55,28 @@ function AccountOverview({ userInfo }) {
               Balance
             </Text>
 
-            <HStack>
-              <Text color="green.400" 
-               fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-              fontSize="xl" position="relative" top={1}>
-                {" "}
-                {/* Adjust this value as needed */}₹
-              </Text>
-
-              <Text
-                fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-                fontSize="21px"
-                fontWeight="normal"
-                lineHeight="32px"
-                textAlign="left"
-                color="white"
-                height="32px"
+            <HStack spacing={1} align="center">
+              <Heading
+                color="#4CE77F"
+                fontSize="xl"
+                lineHeight="1"
+                verticalAlign="middle"
               >
-                {userInfo.balance}
-              </Text>
+                ₹
+              </Heading>
+              <Heading
+                fontSize="xl"
+                fontWeight="bold"
+                lineHeight="1"
+                color="white"
+              >
+                {userInfo.balance!==undefined ? userInfo.balance.toLocaleString('en-IN') :0}
+              </Heading>
             </HStack>
           </VStack>
           <VStack align="end">
             <Text
-            fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+              fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
               fontSize="20px"
               fontWeight="normal"
               lineHeight="30px"
@@ -89,24 +88,23 @@ function AccountOverview({ userInfo }) {
               Your holding
             </Text>
 
-            <HStack>
-              <Text color="green.400" 
-               fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-              fontSize="xl" position="relative" top={1}>
-                {" "}
-                {/* Adjust this value as needed */}₹
-              </Text>
-              <Text
-                fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-                fontSize="21px"
-                fontWeight="normal"
-                lineHeight="32px"
-                textAlign="left"
-                color="white"
-                height="32px"
+            <HStack spacing={1} align="center">
+              <Heading
+                color="#4CE77F"
+                fontSize="xl"
+                lineHeight="1"
+                verticalAlign="middle"
               >
-                {userInfo.holdings}
-              </Text>
+                ₹
+              </Heading>
+              <Heading
+                fontSize="xl"
+                fontWeight="bold"
+                lineHeight="1"
+                color="white"
+              >
+                {userInfo.holdings !==undefined ? userInfo.holdings.toLocaleString('en-IN') : 0}
+              </Heading>
             </HStack>
           </VStack>
         </Flex>
@@ -122,27 +120,48 @@ function AccountOverview({ userInfo }) {
         mb={8}
         fontFamily="Inter"
       >
-        <Heading color="white" fontSize="lg" fontFamily={"Helvetica"} mb={4} fontWeight={500}>
+        <Heading
+          color="white"
+          fontSize="lg"
+          fontFamily={"Helvetica"}
+          mb={4}
+          fontWeight={500}
+        >
           Start your wealth creation journey
         </Heading>
         <List spacing={4}>
           <ListItem display="flex" alignItems="center" fontWeight={300}>
-            <Icon as={CiCircleCheck} color="green.400" boxSize={5} mr={3} />
-            <Text color="gray.300"  fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">Add balance to your broking account</Text>
+            <Icon as={FaRegCircleCheck} color="green.400" boxSize={5} mr={3} />
+            <Text
+              color="gray.300"
+              fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+            >
+              Add balance to your broking account
+            </Text>
           </ListItem>
           <ListItem display="flex" alignItems="center" fontWeight={300}>
-            <Icon as={CiCircleCheck} color="green.400" boxSize={5} mr={3} />
-            <Text color="gray.300"  fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">Invest via curated portfolios</Text>
+            <Icon as={FaRegCircleCheck} color="green.400" boxSize={5} mr={3} />
+            <Text
+              color="gray.300"
+              fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+            >
+              Invest via curated portfolios
+            </Text>
           </ListItem>
           <ListItem display="flex" alignItems="center" fontWeight={300}>
-            <Icon as={CiCircleCheck} color="green.400" boxSize={5} mr={3} />
-            <Text color="gray.300"  fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">See your wealth grow</Text>
+            <Icon as={FaRegCircleCheck} color="green.400" boxSize={5} mr={3} />
+            <Text
+              color="gray.300"
+              fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+            >
+              See your wealth grow
+            </Text>
           </ListItem>
         </List>
       </Box>
     </Box>
   ) : (
-    <Box mb={8} >
+    <Box mb={8}>
       <Box
         bg="#262A33"
         border="1px"
@@ -150,13 +169,14 @@ function AccountOverview({ userInfo }) {
         borderRadius="md"
         p={4}
         fontFamily="Inter"
-        mb={8}
+        // mb={8}
       >
         <Box>
           <Box display={"flex"} justifyContent={"space-between"}>
             <Text
               sx={{
-                fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                fontFamily:
+                  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 fontWeight: "normal",
                 textAlign: "left",
                 color: "#DEE1E6",
@@ -168,7 +188,8 @@ function AccountOverview({ userInfo }) {
               <Text color="#4CE77F">₹</Text>
               <Text
                 sx={{
-                  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                  fontFamily:
+                    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                   fontSize: "16px",
                   fontWeight: "500",
                   lineHeight: "18px",
@@ -176,7 +197,7 @@ function AccountOverview({ userInfo }) {
                   color: "white",
                 }}
               >
-                {userInfo.investment}
+                {userInfo.investment ? userInfo.investment.toLocaleString('en-IN'): 0}
               </Text>
             </HStack>
           </Box>
@@ -184,7 +205,8 @@ function AccountOverview({ userInfo }) {
           <Box display={"flex"} justifyContent={"space-between"}>
             <Text
               sx={{
-                fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                fontFamily:
+                  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 fontWeight: "normal",
                 textAlign: "left",
                 color: "#DEE1E6",
@@ -196,7 +218,8 @@ function AccountOverview({ userInfo }) {
               <Text color="#4CE77F">₹</Text>
               <Text
                 sx={{
-                  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                  fontFamily:
+                    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                   fontSize: "16px",
                   fontWeight: "500",
                   lineHeight: "18px",
@@ -204,26 +227,22 @@ function AccountOverview({ userInfo }) {
                   color: "white",
                 }}
               >
-                {userInfo.currentValue}
+                {userInfo.currentValue ? userInfo.currentValue.toLocaleString('en-IN') : 0}
               </Text>
             </HStack>
           </Box>
         </Box>
 
-        <Box
-          display={"flex"}
-        
-          justifyContent={"space-between"}
-          mt={6}
-        >
+        <Box display={"flex"} justifyContent={"space-between"}   mt={6}>
           <Heading
             sx={{
               width: "134px",
               height: "60px",
-              fontFamily:"Helvetica",
+            
+              fontFamily: "Helvetica",
               fontSize: "20px",
               fontWeight: "500",
-              lineHeight: "40px",
+              lineHeight: "30px",
               textAlign: "left",
               color: "white",
               marginBottom: "16px", // mb={4} corresponds to 16px in Chakra UI
@@ -232,51 +251,21 @@ function AccountOverview({ userInfo }) {
             Your Baskets Returns
           </Heading>
 
-          {/* <VStack border={"2px solid green"}>
-            <HStack alignItems={"right"}>
-              {userInfo.returnsState === "green" ? (
-                <Icon as={FaCaretUp} color="#1DD75B" />
-              ) : (
-                <Icon as={FaCaretDown} color="red.400" />
-              )}
-              <Text
-                color={
-                  userInfo.returnsState === "green" ? "#1DD75B" : "red.400"
-                }
-              >
-                {userInfo.percentageReturns}%
-              </Text>
-            </HStack  >
-            <Text
-              alignItems={"left"}
-              sx={{
-                width: "134px",
-                height: "60px",
-                fontFamily: "Inter",
-                fontSize: "20px",
-                fontWeight: "500",
-                lineHeight: "40px",
-                textAlign: "left",
-                color: "#1DD75B",
-                marginBottom: "16px", // mb={4} corresponds to 16px in Chakra UI
-              }}
-            >
-              {" "}
-              ₹{userInfo.protfolioReturns}
-            </Text>
-          </VStack> */}
+       
 
-<VStack 
-  bottom={0} // Set to bottom
-  right={0} // Optionally align to the right
-  // border={"1px solid green"}
-  alignItems={"flex-end"} // Align all items to the right
-  spacing={0} // Remove vertical spacing between items
-  padding={4} // Optional: Add some padding if needed
->
-  {/* Percentage Returns (small, positioned like an exponent) */}
-  <HStack 
-    spacing={1} 
+          <VStack
+            bottom={0} // Set to bottom
+            right={0} // Optionally align to the right
+       
+            alignItems={"flex-end"} // Align all items to the right
+            spacing={0} // Remove vertical spacing between items
+            padding={2} // Optional: Add some padding if needed
+          >
+          
+          <Box display="flex" justifyContent="flex-end" maxH={"2%"} 
+          mb={1}>
+  <HStack
+    spacing={1}
     alignItems="baseline" // Align items based on text baseline
     sx={{ transform: "translateY(-8px)" }} // Moves the percentage upwards like an exponent
   >
@@ -288,84 +277,39 @@ function AccountOverview({ userInfo }) {
     <Text
       fontSize="12px" // Make the percentage text smaller
       fontWeight="bold"
-       fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-      color={userInfo.returnsState === "green" ? "#1DD75B" : "red.400"}
+      fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+      color={
+        userInfo.returnsState === "green" ? "#1DD75B" : "red.400"
+      }
     >
-      {userInfo.percentageReturns}%
+      {userInfo.percentageReturns ? `${userInfo.percentageReturns.toLocaleString('en-IN')}%` : `0%`}
     </Text>
   </HStack>
+</Box>
 
-  {/* Portfolio Returns (bigger, like the base in an exponent expression) */}
-  <Text
-    sx={{
-      fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      fontSize: "24px", // Bigger font size for the main number
-      fontWeight: "600",
-      lineHeight: "30px",
-      textAlign: "right", // Align text to the right
-      color: "#1DD75B",
-    }}
-  >
-    ₹ {userInfo.protfolioReturns}
-  </Text>
-</VStack>
-
+            {/* Portfolio Returns (bigger, like the base in an exponent expression) */}
+            <Text
+           
+              sx={{
+                fontFamily:
+                  "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                fontSize: "24px", // Bigger font size for the main number
+                fontWeight: "600",
+                lineHeight: "30px",
+                textAlign: "right", // Align text to the right
+                color: "#1DD75B",
+              }}
+            >
+              ₹ {userInfo.protfolioReturns !==undefined ?userInfo.protfolioReturns.toLocaleString('en-IN') : 0}
+            </Text>
+          </VStack>
         </Box>
 
-        {/* <Heading color="white" fontSize="lg" mb={4} fontWeight={500}>
-          Your Portfolio Returns
-        </Heading>
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          fontWeight={300}
-        >
-          <Text
-            color={userInfo.returnsState === "green" ? "green.400" : "red.400"}
-            fontSize="lg"
-            fontWeight="bold"
-          >
-            ₹{userInfo.protfolioReturns}
-          </Text>
-          <HStack>
-            {userInfo.returnsState === "green" ? (
-              <Icon as={FaCaretUp} color="green.400" />
-            ) : (
-              <Icon as={FaCaretDown} color="red.400" />
-            )}
-            <Text color="white">{userInfo.percentageReturns}%</Text>
-          </HStack>
-        </Flex> */}
+       
 
-        {/* <Divider my={4} borderColor="gray.600" /> */}
       </Box>
 
-      {/* <Box
-        bg="#262A33"
-        border={"2px solid red"}
-        // border="1px"
-        borderColor="gray.600"
-        fontFamily="Inter"
-        borderRadius="md"
-        p={4}
-      >
-        <Flex
-     
-          justifyContent="space-between"
-          alignItems="center"
-          fontWeight={300}
-        >
-          <Text color="white" fontWeight="bold" fontSize="lg">
-            Investment Score
-          </Text>
-          <Text color="green.400" fontWeight="bold" fontSize="3xl">
-            {userInfo.investmentScore}
-          </Text>
-        </Flex>
-        <Text color="gray.300" mt={4}>
-          {userInfo.investmentScoreCardInfo}
-        </Text>
-      </Box> */}
+      
     </Box>
   );
 }

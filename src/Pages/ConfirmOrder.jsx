@@ -29,6 +29,7 @@ import { CiCircleCheck } from "react-icons/ci";
 import CustomToast from "../Components/ConfirmOrder/CustomToast";
 import { getBalance } from "../Redux/authReducer/action";
 import {
+  basket_order_exit,
   getBasketDetails,
   getOrderHistory,
   OrderPlaced,
@@ -52,12 +53,13 @@ const ConfirmOrder = () => {
   const { id } = useParams();
   const token = Cookies.get("login_token_client");
   const userId=Cookies.get("userId_client");
+  const basketState=Cookies.get("basket-state")
   const [bufferAmount,setBufferAmount]=useState(0)
 const lots=Number(Cookies.get('lots'))
 
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
   const {isLoading,newInstrumentsData,basketData}=useSelector((store) => store.basketReducer);
-
+console.log(basketState,"basketState")
 
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
@@ -241,6 +243,64 @@ console.log(res,"response")
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
+  const handleExitBasket = () => {
+    setIsSubmitting(true)
+    dispatch(basket_order_exit(id, token))
+      .then((res) => {
+        console.log(res, "handleExitBasket");
+
+        if (res.data.detail === "There is no order to exit") {
+          setIsSubmitting(false)
+          toast({
+            title: "Warning",
+            description: "There is no order to exit",
+            status: "warning",
+            duration: 3000, // Toast duration in milliseconds
+            isClosable: true,
+          });
+          navigate(
+            `/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`
+          );
+        }
+        // Show success toast notification
+        if (res.data.status === "success") {
+          toast({
+            duration: 10000,
+            position: "bottom",
+            render: (props) => (
+              <CustomToast
+                userName={userName}
+                rating={rating}
+                tempRating={tempRating}
+                setTempRating={setTempRating}
+                handleStarClick={handleStarClick}
+                onClose={props.onClose}
+              />
+            ),
+          });
+        
+        
+             // Set a timer to navigate back after 10 seconds
+             setTimeout(() => {
+  
+              navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+            }, 10000); // 10 seconds delay
+        }
+      })
+      .catch((error) => {
+        console.log(error, "handleExitBasket Error");
+
+        // Show error toast notification
+        toast({
+          title: "Exit Failed",
+          description: "There was an error exiting the basket.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+  };
+
   return (
     <Box >
       <Box p={4} pb={0}>
@@ -396,7 +456,20 @@ console.log(res,"response")
                     >
                       {instrument.quantity}
                     </Td>
-                    <Td
+                    {basketState=="Exit"?(
+                         <Td
+                         width="99px"
+                         height="22px"
+                         fontFamily="Inter"
+                         fontSize="14px"
+                         fontWeight="400"
+                         lineHeight="22px"
+                         textAlign="left"
+                         color="#E05858"
+                       >
+                         SELL
+                       </Td>
+                    ):(   <Td
                       width="99px"
                       height="22px"
                       fontFamily="Inter"
@@ -407,7 +480,8 @@ console.log(res,"response")
                       color="#4CE77F"
                     >
                       BUY
-                    </Td>
+                    </Td>)}
+                 
                   </Tr>
                 ))}
             </Tbody>
@@ -635,7 +709,29 @@ console.log(res,"response")
     height="100px"
     mt={2}
     width="100%" // Ensure the box spans full width to avoid cutoff
-  >
+  >{basketState=="Exit"?(
+    <Button
+      color="#DE3B40"
+      border="1px solid #DE3B40"
+      variant="outline"
+      fontFamily={"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"}
+      width={["90%", "80%"]} // Responsive width
+      height={["50px", "60px"]}
+      _hover={{
+        boxShadow: "0 0 10px #DE3B40",
+        transform: "scale(1.05)",
+      }}
+      _active={{
+        boxShadow: "0 0 15px #DE3B40",
+        transform: "scale(0.95)",
+      }}
+      onClick={handleConfirmOrder}
+      isLoading={isSubmitting}
+    >
+      Exit basket
+    </Button>
+  ):(
+
     <Button
       color="#1DD75B"
       border="1px solid #1DD75B"
@@ -656,6 +752,8 @@ console.log(res,"response")
     >
       Confirm Order
     </Button>
+  )}
+    
   </Box>
 </Box>
     </Box>
