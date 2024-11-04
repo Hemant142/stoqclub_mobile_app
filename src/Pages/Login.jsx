@@ -173,7 +173,8 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-
+console.log(userId, "User ID")
+console.log(panCard,"Pancard")
   return (
     <Container
       height="100vh"
@@ -211,7 +212,7 @@ const Login = () => {
               />
               <Input
                 value={userId}
-                onChange={(e) => setUserId(e.target.value)}
+                onChange={(e) => setUserId(e.target.value.toUpperCase())}
                 placeholder="Enter UserID"
                 bg="#000000"
                 color="white"
@@ -237,7 +238,7 @@ const Login = () => {
               />
               <Input
                 value={panCard}
-                onChange={(e) => setPanCard(e.target.value)}
+                onChange={(e) => setPanCard(e.target.value.toUpperCase())}
                 placeholder="Enter PAN Card Number"
                 bg="#000000"
                 color="white"

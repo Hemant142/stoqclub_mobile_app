@@ -279,7 +279,7 @@ console.log(res,"response")
             ),
           });
         
-        
+          Cookies.set("basket-state", "");
              // Set a timer to navigate back after 10 seconds
              setTimeout(() => {
   
@@ -725,7 +725,7 @@ console.log(res,"response")
         boxShadow: "0 0 15px #DE3B40",
         transform: "scale(0.95)",
       }}
-      onClick={handleConfirmOrder}
+      onClick={handleExitBasket}
       isLoading={isSubmitting}
     >
       Exit basket
