@@ -47,7 +47,7 @@ export default function BasketDetails() {
   const { isLoading, newInstrumentsData, basketData } = useSelector(
     (store) => store.basketReducer
   );
-console.log(isRebalancing,"isRebalancing")
+
   
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
@@ -184,7 +184,7 @@ console.log(isRebalancing,"isRebalancing")
   }, [newInstrumentsData, orderHistory, basketData.instrumentList, isRebalancingSuccess]);
   
 
-console.log(rebalancingList,"Rebalincing List")
+
   // Function to generate last 6 months data for both Basket and Underlying Index
   const generateLast6MonthsData = () => {
     const currentDate = new Date();
@@ -247,7 +247,6 @@ console.log(rebalancingList,"Rebalincing List")
   };
 
 
-console.log(basketData,"Basket DAta")
 
   return (
     <Box>

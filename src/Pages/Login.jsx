@@ -173,8 +173,6 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-console.log(userId, "User ID")
-console.log(panCard,"Pancard")
   return (
     <Container
       height="100vh"

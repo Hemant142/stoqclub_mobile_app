@@ -70,7 +70,6 @@ export default function Rebalancing({ rebalancingList,id ,RebalancingSuccess}) {
   
       dispatch(RebalancingNewOrder(id,token))
       .then((res)=>{
-        console.log(res)
         if(res.data.detail){
           RebalancingSuccess()
           toast({

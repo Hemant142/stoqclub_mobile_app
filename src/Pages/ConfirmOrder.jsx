@@ -59,7 +59,7 @@ const lots=Number(Cookies.get('lots'))
 
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
   const {isLoading,newInstrumentsData,basketData}=useSelector((store) => store.basketReducer);
-console.log(basketState,"basketState")
+
 
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
@@ -170,24 +170,24 @@ console.log(basketState,"basketState")
 const formattedAmountToInvest = (amountToInvest || 0).toLocaleString();
 const formattedTotal = (total || 0).toLocaleString();
 
-// console.log(userId,"USer Id")
+
 
 const handleConfirmOrder = () => {
-  if (total > currentBalance) {
-    toast({
-      title: "Warning",
-      description: "Your total exceeds your current balance.",
-      status: "warning",
-      duration: 5000,
-      isClosable: true,
-    });
-    return;
-  }
+  // if (total > currentBalance) {
+  //   toast({
+  //     title: "Warning",
+  //     description: "Your total exceeds your current balance.",
+  //     status: "warning",
+  //     duration: 5000,
+  //     isClosable: true,
+  //   });
+  //   return;
+  // }
 
   setIsSubmitting(true)
   dispatch(OrderPlaced(id, lots, token))
     .then((res) => {
-console.log(res,"response")
+
       if(res.data.status==="failed"){
         setIsSubmitting(false)
         toast({
@@ -250,7 +250,7 @@ console.log(res,"response")
     setIsSubmitting(true)
     dispatch(basket_order_exit(id, token))
       .then((res) => {
-        console.log(res, "handleExitBasket");
+     
 
         if (res.data.detail === "There is no order to exit") {
           setIsSubmitting(false)

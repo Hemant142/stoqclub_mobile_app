@@ -32,22 +32,25 @@ const InvestmentSection = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const minReqAmt = parseInt(props.minReq);
-  const currentBalance = parseInt(props.currentBalance);
+  const minReqAmt = parseFloat(props.minReq);
+  const currentBalance = parseFloat(props.currentBalance);
   const instrumentList = props.instrumentList; // Keep instrumentList as an array, no need to parse it
   const upsidePotential = parseFloat(props.upsidePotential);
   const basketId = props.basketId;
   const upsidePotentialPercentage = parseInt(props.upsidePotentialPercentage);
   const orderHistory = props.orderHistory;
   const [showInvestmentOptions, setShowInvestmentOptions] = useState(false);
-  const [amountToInvest, setAmountToInvest] = useState(minReqAmt);
+  const [amountToInvest, setAmountToInvest] = useState(0);
   const [lots, setLots] = useState(1); // Initial lot size as 1
   const [apiLoader, setApiLoader] = useState(false);
   const [showExitButton, setShowExitButton] = useState(false);
   const token = Cookies.get("login_token_client");
   
+  useEffect(()=>{
+    setAmountToInvest(minReqAmt)
+  },[minReqAmt])
 
-  console.log(showExitButton, "showExitButton");
+ 
   const handleInvestClick = () => {
     setShowInvestmentOptions(true);
     setAmountToInvest(minReqAmt); // Reset amount to minimum requirement
