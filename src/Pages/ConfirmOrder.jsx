@@ -173,21 +173,23 @@ const formattedTotal = (total || 0).toLocaleString();
 // console.log(userId,"USer Id")
 
 const handleConfirmOrder = () => {
-  // if (total > currentBalance) {
-  //   toast({
-  //     title: "Warning",
-  //     description: "Your total exceeds your current balance.",
-  //     status: "warning",
-  //     duration: 5000,
-  //     isClosable: true,
-  //   });
-  //   return;
-  // }
+  if (total > currentBalance) {
+    toast({
+      title: "Warning",
+      description: "Your total exceeds your current balance.",
+      status: "warning",
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
+  }
 
+  setIsSubmitting(true)
   dispatch(OrderPlaced(id, lots, token))
     .then((res) => {
 console.log(res,"response")
       if(res.data.status==="failed"){
+        setIsSubmitting(false)
         toast({
           title: "",
           description: res.data.message,
@@ -199,6 +201,7 @@ console.log(res,"response")
 
 
       if (res.data.status === "success") {
+      
         toast({
           duration: 10000,
           position: "bottom",
@@ -217,7 +220,7 @@ console.log(res,"response")
       
            // Set a timer to navigate back after 10 seconds
            setTimeout(() => {
-
+            setIsSubmitting(false)
             navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
           }, 10000); // 10 seconds delay
   
@@ -282,7 +285,7 @@ console.log(res,"response")
           Cookies.set("basket-state", "");
              // Set a timer to navigate back after 10 seconds
              setTimeout(() => {
-  
+              setIsSubmitting(false)
               navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
             }, 10000); // 10 seconds delay
         }
@@ -304,6 +307,7 @@ console.log(res,"response")
   return (
     <Box >
       <Box p={4} pb={0}>
+
         <IconButton
           aria-label="Go back"
           icon={<LuChevronLeftCircle />}
