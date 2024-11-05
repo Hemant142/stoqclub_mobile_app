@@ -120,7 +120,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
                         ? "#1DD75B" // Green for positive returns
                         : "red.400" // Red for negative or zero returns
                     }
-                    mt={2}
+                    // mt={1}
                   >
                     {calculateBasketReturns(bskt, allSymbols)}%{" "}
                     {/* Display basket returns with 2 decimal places */}
