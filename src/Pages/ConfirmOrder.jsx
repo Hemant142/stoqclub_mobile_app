@@ -46,7 +46,7 @@ const ConfirmOrder = () => {
   const [tempRating,setTempRating] =useState(0)
   const [rating, setRating] = useState(null);
   const [amountToInvest,setAmountToInvest]=useState(0)
-  const [timeLeft, setTimeLeft] = useState(60); // 15 minutes = 900 seconds
+  const [timeLeft, setTimeLeft] = useState(900); // 15 minutes = 900 seconds
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMarketOpen,setisMarketOpen]=useState(false)
