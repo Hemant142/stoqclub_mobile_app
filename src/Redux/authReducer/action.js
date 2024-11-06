@@ -44,12 +44,19 @@ export const clientToken = (data) => (dispatch) => {
     );
   };
 
-export const getUserInfo=(userId)=>(dispatch)=>{
+export const getUserInfo=(token)=>(dispatch)=>{
   dispatch({ type: USER_LOADING });
-  axios.get(`${URL}get-balance/v2?user_id=${userId}`)
-  .then((res)=>{
+  axios.get(`${NewURL}app/client/get-client-info`,
 
-    if(res.data.status==="SUCCESS"){
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass Bearer token for authentication
+      },
+    }
+  )
+  .then((res)=>{
+// console.log(res.data,"response")
+    if(res.data.status==="success"){
       dispatch({type:USER_LOGIN_SUCCESS, payload:res.data.data})
     }
     

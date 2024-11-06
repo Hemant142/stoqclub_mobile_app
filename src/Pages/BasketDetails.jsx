@@ -250,7 +250,7 @@ export default function BasketDetails() {
 
   return (
     <Box>
-      {apiLoading ? (
+      {Object.keys(basketData).length === 0 ? (
         <Loader />
       ) : (
         // <InvestmentSection

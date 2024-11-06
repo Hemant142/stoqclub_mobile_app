@@ -325,7 +325,7 @@ const Login = () => {
           authToken={authToken}
           onClose={() => setIsOTPDrawerOpen(false)}
           onFailure={handleOTPFailure}
-          onSuccess={() => navigate(`/home?UserId=${clientUserId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)}
+          onSuccess={() => navigate(`/home`)}
           attempts={attempts} // Pass attempts to OtpDrawer
         />
       )}

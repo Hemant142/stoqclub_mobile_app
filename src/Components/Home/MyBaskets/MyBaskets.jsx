@@ -14,18 +14,18 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 const MyBaskets = ({ userInfo }) => {
-  if (userInfo.firstTimeClient) {
+  if (userInfo.currentHoldings.length === 0) {
     return null; // Return null if the user is a first-time client
   }
-
+ 
   return (
-    <section className="my-baskets" bg="darkBackground" alignItems={"left"} >
-      <Heading size="lg" mb={4} fontFamily={"Helvetica"} >
+    <section className="my-baskets" bg="darkBackground" alignItems={"left"}>
+      <Heading size="lg" mb={4} fontFamily={"Helvetica"}>
         My Baskets
       </Heading>
-      {userInfo.myBaskets && userInfo.myBaskets.length > 0 ? (
+      {userInfo.currentHoldings && userInfo.currentHoldings.length > 0 ? (
         <Stack spacing={4} mb={4}>
-          {userInfo.myBaskets.map((bskt, index) => (
+          {userInfo.currentHoldings.map((bskt, index) => (
             <Link
               key={`all_basket_${index}`}
               to={`/basket/${bskt.basketId}`}
@@ -49,43 +49,58 @@ const MyBaskets = ({ userInfo }) => {
                   mr={2}
                 >
                   <Image
-                    src={bskt.iconUrl}
-                    alt={bskt.title}
+                    src={
+                      bskt.iconUrl ||
+                      "https://www.reshot.com/preview-assets/icons/UVGTJ3BMDZ/invoice-UVGTJ3BMDZ.svg"
+                    }
+                    alt={bskt.basketName || "Default Icon"}
                     width="34"
-                    height="34px"
+                    height="34"
                   />
                 </Box>
 
                 {/* Responsive Flex for Title and Returns */}
-                <Flex flexDirection="row" flexGrow={1} mr={2} gap={4}>
-                  {" "}
-                  {/* Change to row and add gap */}
-                  <Heading
-                    size="sm"
-                    noOfLines={1}
-                    fontSize={{ base: "14px", md: "16px" }} // Adjusts font size for mobile and larger screens
-                    fontWeight="bold"
-                  >
-                    {bskt.title.length > 10
-                      ? `${bskt.title.slice(0, 10)}...`
-                      : bskt.title}
-                  </Heading>
-                  <Text
-                    fontSize={{ base: "12px", md: "14px" }} // Smaller font size for mobile
-                    fontWeight="medium"
-                     fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-                    color={bskt.returnsFlag === "red" ? "red.500" : "#1DD75B"}
-                  >
-                    {bskt.avrageReturns}
-                    <span
-                      style={{
-                        color:
-                          bskt.returnsFlag === "red" ? "red.500" : "#1DD75B",
-                      }}
+                <Flex
+                  flexDirection="row"
+                  flexGrow={1}
+                  mr={2}
+                  gap={4}
+                  alignItems="center"
+                >
+                  <Box>
+                    <Heading
+                      size="sm"
+                      noOfLines={1}
+                      fontSize={{ base: "14px", md: "16px" }}
+                      fontWeight="bold"
                     >
-                      ({bskt.percentageReturns}%)
-                    </span>
-                  </Text>
+                      {bskt.basketName.length > 10
+                        ? `${bskt.basketName.slice(0, 10)}...`
+                        : bskt.basketName}
+                    </Heading>
+                  </Box>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Text
+                      fontSize={{ base: "14px", md: "16px" }}
+                      fontWeight="medium"
+                      fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+                      color={bskt.totalReturns < 0 ? "red.500" : "#1DD75B"}
+                    >
+                      {bskt.totalReturns}
+                      <span
+                        style={{
+                          color:
+                            bskt.percentageReturns < 0 ? "red.500" : "#1DD75B",
+                        }}
+                      >
+                        ({bskt.percentageReturns}%)
+                      </span>
+                    </Text>
+                  </Box>
                 </Flex>
 
                 {/* Button */}
@@ -107,7 +122,9 @@ const MyBaskets = ({ userInfo }) => {
           ))}
         </Stack>
       ) : (
-        <Text mb={4} className="no_data_box">No Baskets Available</Text>
+        <Text mb={4} className="no_data_box">
+          No Baskets Available
+        </Text>
       )}
     </section>
   );

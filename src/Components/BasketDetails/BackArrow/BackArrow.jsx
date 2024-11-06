@@ -10,7 +10,7 @@ const BackArrow = () => {
   const goBack = () => {
     const userId = Cookies.get("userId")
     navigate(
-      `/home/?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN WAVE`
+      `/home`
     );
   };
 

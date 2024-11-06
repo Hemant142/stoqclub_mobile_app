@@ -75,7 +75,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
             >
               <Box
                 width="100px"
-                height="122px"
+                height="120px"
                 bg="rgba(38, 42, 51, 1)"
                 textAlign="center"
                 borderRadius="8px"

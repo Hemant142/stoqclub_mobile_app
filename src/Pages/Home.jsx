@@ -35,37 +35,38 @@ export default function Home() {
   useEffect(() => {
     dispatch(getAllBaskets(token));
     dispatch(fetchSymbols(token));
-
+dispatch(getUserInfo(token))
     dispatch(getBalance(token));
   }, [dispatch, token]);
 
-  useEffect(() => {
-    if (userId == null && SessionId == null) {
-      navigate("/404");
-      return;
-    } else {
-      Cookies.set("userId", `${userId}`);
-      let SessionID = btoa(SessionId);
-      Cookies.set("SessionId", `${SessionID}`);
-    }
+  // useEffect(() => {
+    // if (userId == null && SessionId == null) {
+    //   navigate("/404");
+    //   return;
+    // } else {
+    //   Cookies.set("userId", `${userId}`);
+    //   let SessionID = btoa(SessionId);
+    //   Cookies.set("SessionId", `${SessionID}`);
+    // }
 
     // make your api calls here
-    dispatch(getUserInfo(userId));
-  }, [dispatch, userId, SessionId, navigate]);
+    // dispatch(getUserInfo(userId));
+  // }, [dispatch, userId, SessionId, navigate]);
 
   // Use effect to set the cookie when userDetails changes
   useEffect(() => {
-    if (userDetails && userDetails.name) {
+    if (userDetails && userDetails.username) {
       // Store the user's name in a cookie called 'user-name'
-      Cookies.set("user-name", userDetails.name, { expires: 7 }); // Set to expire in 7 days
-      if (userDetails.balance !== undefined) {
-        Cookies.set("balance", userDetails.balance);
+      Cookies.set("user-name", userDetails.username, { expires: 7 }); // Set to expire in 7 days
+      if (userDetails.currentBalance !== undefined) {
+        Cookies.set("balance", userDetails.currentBalance);
       } else {
         Cookies.set("balance", 10000);
       }
     }
   }, [userDetails]); //
 
+ 
   return (
     <Box>
       {Object.keys(userDetails).length === 0 ? (
@@ -96,7 +97,7 @@ export default function Home() {
                 fontWeight="normal"
                 color="white"
               >
-                {`Hi, ${userDetails?.name} !`}
+                {`Hi, ${userDetails?.username} !`}
               </Heading>
             </Box>
 

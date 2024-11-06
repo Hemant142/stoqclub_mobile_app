@@ -16,7 +16,8 @@ import { CiCircleCheck } from "react-icons/ci";
 import { FaRegCircleCheck } from "react-icons/fa6";
 
 function AccountOverview({ userInfo }) {
-  return userInfo.firstTimeClient ? (
+
+  return userInfo.currentHoldings.length === 0 ? (
     <Box mb={8} >
       <Box
         bg="#262A33"
@@ -70,7 +71,7 @@ function AccountOverview({ userInfo }) {
                 lineHeight="1"
                 color="white"
               >
-                {userInfo.balance!==undefined ? userInfo.balance.toLocaleString('en-IN') :0}
+                {userInfo.currentBalance!==undefined ? userInfo.currentBalance.toLocaleString('en-IN') :0}
               </Heading>
             </HStack>
           </VStack>
@@ -103,7 +104,7 @@ function AccountOverview({ userInfo }) {
                 lineHeight="1"
                 color="white"
               >
-                {userInfo.holdings !==undefined ? userInfo.holdings.toLocaleString('en-IN') : 0}
+                {userInfo.totalHoldings !==undefined ? userInfo.totalHoldings.toLocaleString('en-IN') : 0}
               </Heading>
             </HStack>
           </VStack>
@@ -197,7 +198,7 @@ function AccountOverview({ userInfo }) {
                   color: "white",
                 }}
               >
-                {userInfo.investment ? userInfo.investment.toLocaleString('en-IN'): 0}
+                {userInfo.totalInvestedPrice ? userInfo.totalInvestedPrice.toLocaleString('en-IN'): 0}
               </Text>
             </HStack>
           </Box>
@@ -227,7 +228,7 @@ function AccountOverview({ userInfo }) {
                   color: "white",
                 }}
               >
-                {userInfo.currentValue ? userInfo.currentValue.toLocaleString('en-IN') : 0}
+                {userInfo.totalCurrentPrice ? userInfo.totalCurrentPrice.toLocaleString('en-IN') : 0}
               </Text>
             </HStack>
           </Box>
@@ -269,7 +270,7 @@ function AccountOverview({ userInfo }) {
     alignItems="baseline" // Align items based on text baseline
     sx={{ transform: "translateY(-8px)" }} // Moves the percentage upwards like an exponent
   >
-    {userInfo.returnsState === "green" ? (
+    {userInfo.totalPercentageReturns >0 ? (
       <Icon as={FaCaretUp} color="#1DD75B" boxSize="14px" /> // Make the icon smaller
     ) : (
       <Icon as={FaCaretDown} color="red.400" boxSize="14px" />
@@ -279,10 +280,10 @@ function AccountOverview({ userInfo }) {
       fontWeight="bold"
       fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
       color={
-        userInfo.returnsState === "green" ? "#1DD75B" : "red.400"
+        userInfo.totalPercentageReturns >0 ? "#1DD75B" : "red.400"
       }
     >
-      {userInfo.percentageReturns ? `${userInfo.percentageReturns.toLocaleString('en-IN')}%` : `0%`}
+      {userInfo.totalPercentageReturns ? `${userInfo.totalPercentageReturns.toLocaleString('en-IN')}%` : `0%`}
     </Text>
   </HStack>
 </Box>
@@ -300,7 +301,7 @@ function AccountOverview({ userInfo }) {
                 color: "#1DD75B",
               }}
             >
-              ₹ {userInfo.protfolioReturns !==undefined ?userInfo.protfolioReturns.toLocaleString('en-IN') : 0}
+              ₹ {userInfo.totalReturns !==undefined ?userInfo.totalReturns.toLocaleString('en-IN') : 0}
             </Text>
           </VStack>
         </Box>

@@ -46,7 +46,8 @@ const ConfirmOrder = () => {
   const [tempRating,setTempRating] =useState(0)
   const [rating, setRating] = useState(null);
   const [amountToInvest,setAmountToInvest]=useState(0)
-  const [timeLeft, setTimeLeft] = useState(300); 
+  const [timeLeft, setTimeLeft] = useState(60); // 15 minutes = 900 seconds
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMarketOpen,setisMarketOpen]=useState(false)
   let userName = Cookies.get("user-name");
@@ -65,6 +66,42 @@ const lots=Number(Cookies.get('lots'))
     dispatch(getBasketDetails(id, token));
     dispatch(getBalance(token));
   }, [token]);
+
+
+  useEffect(() => {
+    if (token) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerId); // Stop the timer when it reaches 0
+
+            // Show toast notification
+            toast({
+              title: "Session expired",
+              description: "Your session has expired due to inactivity.",
+              status: "error",
+              duration: 5000, // Show toast for 5 seconds
+              isClosable: true,
+            });
+         
+navigate(`/basket/${id}`)
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+
+      // Cleanup function to clear interval when component unmounts
+      return () => clearInterval(timerId);
+    }
+  }, [token,toast]);
+
+  // Format time as MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };
 
   useEffect(() => {
     const checkTimeAndDate = () => {
@@ -221,7 +258,7 @@ const handleConfirmOrder = () => {
            // Set a timer to navigate back after 10 seconds
            setTimeout(() => {
             setIsSubmitting(false)
-            navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+            navigate(`/home`)
           }, 10000); // 10 seconds delay
   
       }
@@ -239,12 +276,6 @@ const handleConfirmOrder = () => {
     };
 
 
-      // Format time as MM:SS
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
 
   const handleExitBasket = () => {
     setIsSubmitting(true)
@@ -262,7 +293,7 @@ const handleConfirmOrder = () => {
             isClosable: true,
           });
           navigate(
-            `/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`
+            `/home`
           );
         }
         // Show success toast notification
@@ -286,7 +317,7 @@ const handleConfirmOrder = () => {
              // Set a timer to navigate back after 10 seconds
              setTimeout(() => {
               setIsSubmitting(false)
-              navigate(`/home?UserId=${userId}&SessionId=SessionId=&Link=5&Calling_App=&partnerId=&Product=ODIN%20WAVE`)
+              navigate(`/home`)
             }, 10000); // 10 seconds delay
         }
       })
