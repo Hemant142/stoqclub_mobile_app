@@ -385,7 +385,7 @@ export default function BasketDetails() {
               />
 
             {basketHistory.length>0&&(<Box>
-              <YourActivity basketHistory={basketHistory}/>
+              <YourActivity basketHistory={basketHistory.reverse()}/>
                 
           
                 <Divider
