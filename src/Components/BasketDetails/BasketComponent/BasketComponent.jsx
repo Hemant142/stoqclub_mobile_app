@@ -5,7 +5,7 @@ import BackArrow from '../BackArrow/BackArrow';
 
 
 const BasketComponent = ({ basketData,basketLastMonthReturn }) => {
-  console.log(basketLastMonthReturn,"basketLastMonthReturn")
+ 
   return (
   
         

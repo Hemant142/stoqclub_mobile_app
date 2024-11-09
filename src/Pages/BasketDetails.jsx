@@ -47,6 +47,7 @@ export default function BasketDetails() {
   const [rebalancingList, setRebalancingList] = useState([]);
   const [isRebalancing,setIsRebalancing]=useState(true)
   const [isRebalancingSuccess,setIsRebalancingSuccess]=useState(true)
+  const [basketExpired, setBasketExpired] = useState(false);
 
   let userId = Cookies.get("user2Id_client");
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
@@ -150,6 +151,29 @@ export default function BasketDetails() {
     } else {
       setApiLoading(true);
     }
+  }, [basketData]);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentHours = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+
+    const checkIfExpired = () => {
+      const expiryDate = new Date(basketData.expiryDate + "T15:30:00");
+      const isExpired =
+        !basketData.isActive ||
+        expiryDate <= currentDate ||
+        (expiryDate.toDateString() === currentDate.toDateString() &&
+          (currentHours > 15 || (currentHours === 15 && currentMinutes >= 30)));
+
+      setBasketExpired(isExpired);
+    };
+
+    checkIfExpired();
+    
+    // Optional: Check every minute to update expiration in real-time
+    const intervalId = setInterval(checkIfExpired, 60000);
+    return () => clearInterval(intervalId);
   }, [basketData]);
 
   useEffect(() => {
@@ -421,19 +445,21 @@ export default function BasketDetails() {
             </Box>)}
               
               <AboutCentrum basketData={basketData} id={id} />
-
-              <InvestmentSection
-                basketId={id}
-                minReq={minAmount || 0} // Provide a default value if fundRequired is undefined
-                basketName={basketData.title || "N/A"} // Provide a default if title is undefined
-                currentBalance={Number(currentBalance) || 0} // Provide a default if currentBalance is undefined
-                instrumentList={newInstrumentsData || []} // Provide a default if instrumentList is undefined
-                upsidePotential={upsidePotential || 0}
-                orderHistory={orderHistory.length}
-                upsidePotentialPercentage={
-                  Number(upsidePotentialPercentage) || 0
-                }
-              />
+ {basketExpired===false && (
+   <InvestmentSection
+   basketId={id}
+   minReq={minAmount || 0} // Provide a default value if fundRequired is undefined
+   basketName={basketData.title || "N/A"} // Provide a default if title is undefined
+   currentBalance={Number(currentBalance) || 0} // Provide a default if currentBalance is undefined
+   instrumentList={newInstrumentsData || []} // Provide a default if instrumentList is undefined
+   upsidePotential={upsidePotential || 0}
+   orderHistory={orderHistory.length}
+   upsidePotentialPercentage={
+     Number(upsidePotentialPercentage) || 0
+   }
+ />
+ )}
+             
             </Box>
           )}
         </Box>
