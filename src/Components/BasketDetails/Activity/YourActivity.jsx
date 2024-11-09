@@ -80,7 +80,9 @@ export default function YourActivity({ basketHistory }) {
                   textAlign="left"
                   width="50%"
                 >
-                  {inst?.instrument}({inst?.lotMultiplier}){" "}
+                  {inst?.instrument}
+                  {/* ({inst?.lotMultiplier}) */}
+                  {" "}
                   {inst?.orderType === "Entry" ? "Invested" : "Basket Exit"}
                 </Text>
               </Box>
