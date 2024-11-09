@@ -122,6 +122,17 @@ export const getOrderHistory=(basketId,token)=>(dispatch)=>{
 }
 
 
+export const getBasketHistory=(basketId,token)=>(dispatch)=>{
+  return axios.get(
+    `${NewURL}app/client/get-basket-history?basketId=${basketId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass Bearer token for authentication
+      },
+    }
+  );
+}
+
 export const OrderPlaced = (id, lot, token) => (dispatch) => {
 
   return axios.post(

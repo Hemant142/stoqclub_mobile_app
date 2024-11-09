@@ -3,6 +3,7 @@ import { Box, Divider, Text } from "@chakra-ui/react";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex }) => {
+
   return (
     <Box
       className="chart"

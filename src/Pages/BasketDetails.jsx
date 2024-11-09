@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import {
   getBasketDetails,
+  getBasketHistory,
   getOrderHistory,
   RebalancingNewOrder,
 } from "../Redux/basketReducer/action";
@@ -21,6 +22,8 @@ import AboutCentrum from "../Components/BasketDetails/AboutCentrum/AboutCentrum"
 import InvestmentSection from "../Components/BasketDetails/InvestmentSection/InvestmentSection";
 import { getBalance } from "../Redux/authReducer/action";
 import Rebalancing from "../Components/BasketDetails/Rebalancing/Rebalancing";
+import MyBasketConstituents from "../Components/BasketDetails/BasketConstituents/MyBasketConstituents";
+import YourActivity from "../Components/BasketDetails/Activity/YourActivity";
 
 export default function BasketDetails() {
   const [apiLoading, setApiLoading] = useState(true);
@@ -37,6 +40,7 @@ export default function BasketDetails() {
   const [upsidePotentialPercentage, setUpsidePotentialPercentage] = useState(0);
   const [lineChartData, setLineChartData] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
+  const [basketHistory,setBasketHistory] = useState([]) 
   const [underlyingIndexLineChart, setUnderlyingIndexLineChart] = useState([]);
   const [rebalancingList, setRebalancingList] = useState([]);
   const [isRebalancing,setIsRebalancing]=useState(true)
@@ -84,6 +88,17 @@ export default function BasketDetails() {
       })
       .catch((error) => {
         console.log(error, "Get ORder History Error");
+      });
+
+      dispatch(getBasketHistory(id, token))
+      .then((res) => {
+   
+      if(res.data.status==="success"){
+        setBasketHistory(res.data.data.orderList)
+      }
+      })
+      .catch((error) => {
+        console.log(error, "Get Basket History Error");
       });
 
     dispatch(getBalance(token));
@@ -309,6 +324,13 @@ export default function BasketDetails() {
                 border="1px solid #BCC1CA" // Adds the solid border with the specified color
                 position="relative"
               />
+              {orderHistory.length>0&&
+              <MyBasketConstituents
+              basketData={basketData}
+              newInstrumentsData={newInstrumentsData}
+              orderHistory={orderHistory}
+              />
+              }
 
               <BasketConstituents
                 basketData={basketData}
@@ -351,6 +373,8 @@ export default function BasketDetails() {
 
               <Activity basketData={basketData} orderHistory={orderHistory} />
 
+
+
               <Divider
                 ml={2}
                 mr={2}
@@ -360,6 +384,18 @@ export default function BasketDetails() {
                 position="relative"
               />
 
+            
+                <YourActivity basketHistory={basketHistory}/>
+                
+          
+                <Divider
+                ml={2}
+                mr={2}
+                m="auto"
+                width="350px" // Sets the width
+                border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                position="relative"
+              />
               <AboutCentrum basketData={basketData} id={id} />
 
               <InvestmentSection
