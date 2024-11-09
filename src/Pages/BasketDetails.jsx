@@ -384,8 +384,8 @@ export default function BasketDetails() {
                 position="relative"
               />
 
-            
-                <YourActivity basketHistory={basketHistory}/>
+            {basketHistory.length>0&&(<Box>
+              <YourActivity basketHistory={basketHistory}/>
                 
           
                 <Divider
@@ -396,6 +396,9 @@ export default function BasketDetails() {
                 border="1px solid #BCC1CA" // Adds the solid border with the specified color
                 position="relative"
               />
+
+            </Box>)}
+              
               <AboutCentrum basketData={basketData} id={id} />
 
               <InvestmentSection
