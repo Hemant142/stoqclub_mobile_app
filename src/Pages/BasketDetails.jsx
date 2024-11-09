@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import {
+  getBasketCalculation,
   getBasketDetails,
   getBasketHistory,
   getOrderHistory,
@@ -41,6 +42,7 @@ export default function BasketDetails() {
   const [lineChartData, setLineChartData] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
   const [basketHistory,setBasketHistory] = useState([]) 
+  const [basketCalculation,setBasketCalculation] = useState({})
   const [underlyingIndexLineChart, setUnderlyingIndexLineChart] = useState([]);
   const [rebalancingList, setRebalancingList] = useState([]);
   const [isRebalancing,setIsRebalancing]=useState(true)
@@ -52,7 +54,7 @@ export default function BasketDetails() {
     (store) => store.basketReducer
   );
 
-  
+
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
 
@@ -95,6 +97,16 @@ export default function BasketDetails() {
    
       if(res.data.status==="success"){
         setBasketHistory(res.data.data.orderList)
+      }
+      })
+      .catch((error) => {
+        console.log(error, "Get Basket History Error");
+      });
+
+      dispatch(getBasketCalculation(id, token))
+      .then((res) => {
+      if(res.data.status==="success"){
+        setBasketCalculation(res.data.data)
       }
       })
       .catch((error) => {
@@ -301,19 +313,28 @@ export default function BasketDetails() {
             <Box>
               <BackArrow />
               <DesktopWarning />
-              <BasketComponent basketData={basketData} />
-              <StatsComponent
-                basketData={basketData}
-                upsidePotential={upsidePotential || 0}
-                upsidePotentialPercentage={upsidePotentialPercentage || 0}
-                minAmount={minAmount || 0}
-              />
-              <LineGraph
-                lineChartData={lineChartData}
-                underlyingIndexLineChart={underlyingIndexLineChart}
-                underlyingIndex={basketData.underlyingIndex}
-              />
+              <BasketComponent basketData={basketData} basketLastMonthReturn={basketCalculation?.basketLastMonthReturn } />
+          
+{/* {Object.keys(basketCalculation).length > 0 && ( */}
+  <StatsComponent
+    basketData={basketData}
+    upsidePotential={basketCalculation?.potentialUpside || 0}
+    upsidePotentialPercentage={basketCalculation?.potentialUpsidePC || 0}
+    minAmount={minAmount || 0}
+    threeYearCAGR={basketCalculation?.["3YearCAGR"] || 0}
+    oneYearReturn={basketCalculation?.["1YearReturn"] || 0}
+  />
+  
+{/* )} */}
 
+<LineGraph
+  lineChartData={basketCalculation.basketValue || []}
+  underlyingIndexLineChart={basketCalculation.underlineValue || []}
+  underlyingIndex={basketData.underlyingIndex || ''}
+/>
+
+
+             
               <InvestmentInfo basketData={basketData} />
 
               <Divider

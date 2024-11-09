@@ -1,22 +1,23 @@
-import { Flex, Heading, Tooltip } from '@chakra-ui/react';
-// import ArrowIcon from './ArrowIcon';
-// import PercentageChange from './PercentageChange';
-import { Badge } from '@chakra-ui/react';
+import { Flex, Heading, Tooltip, Badge } from '@chakra-ui/react';
 import ArrowIcon from './ArrowIcon';
 import PercentageChange from './PercentageChange';
 
- 
-const getPreviousMonth = ()=>{
-  const date =new Date ();
-  date.setMonth(date.getMonth() -1); 
-  return date.toLocaleString('en-US', {month: 'short'})
-}
+const getPreviousMonth = () => {
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1);
+  return date.toLocaleString('en-US', { month: 'short' });
+};
 
-const BasketHeader = ({ basketData }) => {
+const BasketHeader = ({ basketData, basketLastMonthReturn = {} }) => {
+  const month = basketLastMonthReturn?.month 
+    ? basketLastMonthReturn.month.slice(0, 3).toUpperCase()
+    : getPreviousMonth().toUpperCase();
+  const underlyingValue = basketLastMonthReturn?.underlyingValue ?? 0;
+
   return (
     <Flex
-    textAlign={"left"}
-    border={"2px solid red"}
+      textAlign="left"
+      border="2px solid red"
       width="100%"
       mt={2}
       p={2}
@@ -27,42 +28,35 @@ const BasketHeader = ({ basketData }) => {
       borderColor="rgba(184, 245, 205, 1)"
       borderRadius="8px"
       boxShadow="0px 0px 2px rgba(23, 26, 31, 0.12)"
-      // fontFamily={"Epilogue"}
-      fontFamily={"Arial, Helvetica, sans-serif"}
-    //   fontWeight={"normal"}
+      fontFamily="Arial, Helvetica, sans-serif"
     >
-      <Tooltip label={basketData.title} fontSize="md" gap={2}  hasArrow>
-      <Heading
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-        color="rgba(23, 26, 31, 1)"
-        fontSize="20px"
-        fontWeight="700"
-        noOfLines={1}
-        marginLeft="8%"
-        flex="1"
-      >
-        {basketData.title}
-      </Heading>
+      <Tooltip label={basketData.title} fontSize="md" gap={2} hasArrow>
+        <Heading
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+          color="rgba(23, 26, 31, 1)"
+          fontSize="20px"
+          fontWeight="700"
+          noOfLines={1}
+          marginLeft="8%"
+          flex="1"
+        >
+          {basketData.title}
+        </Heading>
       </Tooltip>
-      <ArrowIcon monthProfitFlag={basketData.monthProfitFlag} />
-      <PercentageChange
-        monthProfitFlag={basketData.monthProfitFlag} 
-        monthPercentageReturns={basketData.monthPercentageReturns} 
-      />
+      <ArrowIcon monthProfitFlag={underlyingValue} />
+      <PercentageChange monthProfitFlag={underlyingValue} />
       <Badge
-       fontFamily={"Epilogue"}
-     
+        fontFamily="Epilogue"
         fontSize="11px"
         backgroundColor="rgba(29, 215, 91, 1)"
         color="rgba(10, 77, 32, 1)"
         borderRadius="full"
         paddingX={2}
-        textAlign={"center"}
+        textAlign="center"
         paddingTop={1}
         marginRight={2}
       >
-        {/* {basketData.month} */}
-       {getPreviousMonth()}
+        {month}
       </Badge>
     </Flex>
   );

@@ -4,7 +4,8 @@ import CompanyIntro from '../CompanyIntro/CompanyIntro';
 import BackArrow from '../BackArrow/BackArrow';
 
 
-const BasketComponent = ({ basketData }) => {
+const BasketComponent = ({ basketData,basketLastMonthReturn }) => {
+  console.log(basketLastMonthReturn,"basketLastMonthReturn")
   return (
   
         
@@ -23,7 +24,7 @@ const BasketComponent = ({ basketData }) => {
          width="100%"
         >
        
-      <BasketHeader basketData={basketData} />
+      <BasketHeader basketData={basketData} basketLastMonthReturn={basketLastMonthReturn} />
       <CompanyIntro description={basketData.description} />
       </Box>
  

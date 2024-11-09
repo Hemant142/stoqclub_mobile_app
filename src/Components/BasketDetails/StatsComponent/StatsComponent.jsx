@@ -5,7 +5,7 @@ import { IoIosSpeedometer } from "react-icons/io";
 
 
 
-const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPercentage }) => {
+const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPercentage ,threeYearCAGR, oneYearReturn }) => {
 
 
 
@@ -79,7 +79,7 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
             textAlign="left"
             color="rgba(144, 149, 160, 1)"
           >
-            {/* 3Y CAGR */}
+       
             Potential UPSIDE
           </Text>
           <Heading
@@ -173,9 +173,9 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
 
 
     <Box display={"flex"} justifyContent={"space-between"} mt={4}>
-    <Box
+  <Box
     minWidth={["140px", "144px", "154px"]}
-    height="73px"  // Set the height for uniformity
+    height="73px"
     textAlign="center"
     padding="10px 18px"
     borderRadius="8px"
@@ -190,74 +190,65 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
   >
     <Text
       fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-            
-      fontSize={["10px", "12px", "14px"]} // Responsive font size for small to large screens
+      fontSize={["10px", "12px", "14px"]}
       fontWeight="400"
       lineHeight="20px"
       textAlign="center"
       color="white"
       marginBottom={1}
     >
-        3Y CAGR
+      3Y CAGR
     </Text>
     <Text
-    fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-      
-      fontSize={["14px", "16px", "18px"]} // Responsive font size based on screen size
+      fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+      fontSize={["14px", "16px", "18px"]}
       fontWeight="500"
       lineHeight="20px"
       textAlign="center"
       color="white"
       whiteSpace="nowrap"
       overflow="hidden"
-      textOverflow="ellipsis" // Handle overflow with ellipsis for long text
+      textOverflow="ellipsis"
     >
-       87%
+      {threeYearCAGR.toLocaleString('en-IN')}
     </Text>
   </Box>
 
-    <Box
-      width="154px"
-      height="73px"
-      top="326px"
-      left="44px"
-      padding="10px 23px 11px 18px"
-      borderRadius="8px"
-      border="1px solid #565E6C"
-       bg=" #262A33"
-      boxShadow="0px 2px 5px 0px #171A1F17"
-     
-    >
-      <Text
+  <Box
+    width="154px"
+    height="73px"
+    top="326px"
+    left="44px"
+    padding="10px 23px 11px 18px"
+    borderRadius="8px"
+    border="1px solid #565E6C"
+    bg="#262A33"
+    boxShadow="0px 2px 5px 0px #171A1F17"
+  >
+    <Text
       fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-            
-        fontSize="12px"
-        fontWeight="400"
-        lineHeight="20px"
-        textAlign="center"
-        color="white" // Change text color as needed
-        marginBottom={1} // Add spacing between the two text elements
-      >
-        1 Year Return
-      </Text>
-      <Text
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-      
-        fontSize="16px" // You can adjust this size based on your design preference
-        fontWeight="500" // Change weight as needed
-        lineHeight="20px"
-        textAlign="center"
-        color="white" // Change text color as needed
-      >
-        {/* {basketData.basketInfo.annualReturns} */}
-        100%
-      </Text>
-    </Box>
+      fontSize="12px"
+      fontWeight="400"
+      lineHeight="20px"
+      textAlign="center"
+      color="white"
+      marginBottom={1}
+    >
+      1 Year Return
+    </Text>
+    <Text
+      fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+      fontSize="16px"
+      fontWeight="500"
+      lineHeight="20px"
+      textAlign="center"
+      color="white"
+    >
+      {oneYearReturn.toLocaleString('en-IN')}%
+    </Text>
+  </Box>
+</Box>
 
-
-    
-
-    </Box>
 
 
 

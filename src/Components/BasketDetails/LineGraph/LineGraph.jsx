@@ -3,22 +3,29 @@ import { Box, Divider, Text } from "@chakra-ui/react";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex }) => {
+  
+  // Merging data based on month
+  const mergedData = lineChartData.map((d) => {
+    const correspondingUnderlying = underlyingIndexLineChart.find(
+      (underlying) => underlying.month === d.month
+    );
+    return {
+      month: d.month,
+      basketValue: d.underlyingValue, // This is basketValue in your original data
+      underlyingValue: correspondingUnderlying ? correspondingUnderlying.underlyingValue : 0, // Default to 0 if no match
+    };
+  });
 
   return (
     <Box
       className="chart"
-    
       mb={4}
       p={4} // Reduced padding for better fit on mobile
       textAlign="center"
     >
       <ResponsiveContainer height={150} width="100%">
         <LineChart
-          data={lineChartData.map((d, i) => ({
-            month: d.month,
-            basketValue: d.basketValue,
-            underlyingValue: underlyingIndexLineChart[i].underlyingValue, // Using the index to align data
-          }))}
+          data={mergedData} // Using the merged data
           margin={{
             top: 5,
             right: 20,
@@ -32,7 +39,7 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
             interval={0} // Show all ticks
           />
           <Tooltip />
-          
+
           {/* Line for Basket */}
           <Line
             type="monotone"
@@ -41,7 +48,7 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
             strokeWidth={3}
             name="Basket"
           />
-          
+
           {/* Line for Underlying Index */}
           <Line
             type="monotone"

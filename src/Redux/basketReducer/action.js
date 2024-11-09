@@ -133,6 +133,17 @@ export const getBasketHistory=(basketId,token)=>(dispatch)=>{
   );
 }
 
+export const getBasketCalculation=(basketId,token)=>(dispatch)=>{
+  return axios.get(
+    `${NewURL}app/client/get-basket-calculation?basketId=${basketId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Pass Bearer token for authentication
+      },
+    }
+  );
+}
+
 export const OrderPlaced = (id, lot, token) => (dispatch) => {
 
   return axios.post(
