@@ -427,7 +427,7 @@ const InvestmentSection = (props) => {
             textAlign="left"
             color="#A7ADB7"
           >
-            Basket Min Amount: ₹{minReqAmt}
+            Basket Min Amount: ₹{minReqAmt.toLocaleString('en-IN')}
           </Text>
 
           {/* <Box display={"flex"} justifyContent={"space-between"}>
@@ -450,7 +450,7 @@ const InvestmentSection = (props) => {
               color="#FFFFFF"
               mt={4}
             >
-              Amount: ₹{amountToInvest}
+              Amount: ₹{amountToInvest.toLocaleString('en-IN')}
             </Text>
             <Text
               fontSize="14px"
@@ -461,7 +461,7 @@ const InvestmentSection = (props) => {
               color="#FFFFFF"
               mt={4}
             >
-              Current Balance: ₹{currentBalance}
+              Current Balance: ₹{currentBalance.toLocaleString('en-IN')}
             </Text>
           
           </Box>
