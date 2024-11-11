@@ -206,10 +206,10 @@ navigate(`/basket/${id}`)
 
   // Use fallback values to prevent errors
 const formattedAmountToInvest = (amountToInvest || 0).toLocaleString();
-const fivePercentOfFormattedAmountToInvest = (amountToInvest * 0.05).toLocaleString();
+
 const formattedTotal = (total || 0).toLocaleString();
 
-
+const fivePercentOfFormattedTotal = (formattedTotal * 0.05).toLocaleString();
 
 const handleConfirmOrder = () => {
   // if (total > currentBalance) {
@@ -728,7 +728,7 @@ const handleConfirmOrder = () => {
         <Text as="span" fontWeight="bold"
         fontFamily={"system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"}
         color="white">
-        {" "}   buffer amount of {fivePercentOfFormattedAmountToInvest} {" "}
+        {" "}   buffer amount of {fivePercentOfFormattedTotal} {" "}
         </Text>
      
         
