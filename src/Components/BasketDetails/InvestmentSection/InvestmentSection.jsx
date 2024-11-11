@@ -137,6 +137,7 @@ const InvestmentSection = (props) => {
       );
       return false;
     } else if (amountToInvest > currentBalance) {
+      
       handleInvalidAmount(
         "Insufficient Balance, you have entered ₹",
         amountToInvest
@@ -493,8 +494,10 @@ const InvestmentSection = (props) => {
   </Button>
 
   <Text
+
     fontWeight="bold"
     fontSize="sm"
+ 
     textAlign="center"
     width="40px"
   >
