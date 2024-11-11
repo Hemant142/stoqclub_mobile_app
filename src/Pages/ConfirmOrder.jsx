@@ -186,11 +186,12 @@ navigate(`/basket/${id}`)
         (acc, instrument) => acc + calculateFundREquired(instrument),
         0
       );
+
   
     
   
       // Set the calculated values in the state
-      setAmountToInvest(total*lots);
+      setAmountToInvest(Math.floor(total)*lots);
 
     }
   }, [basketData]);
