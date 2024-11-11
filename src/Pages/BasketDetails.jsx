@@ -140,7 +140,7 @@ export default function BasketDetails() {
       );
 
       // Set the calculated values in the state
-      setMinAmount(total);
+      setMinAmount(Math.floor(total));
       setUpsidePotentialPercentage(totalUpsidePotentialPercentage); // Assuming you have a state for upside potential
       setUpsidePotential(totalUpsidePotential);
     }
