@@ -42,18 +42,19 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
     return Number(upsidePotential);
   };
 
-  // const handleSymbolName = (symbol) => {
-  //   if (symbol !== "" && symbol !== null) {
-  //     let filterSymbolName = Symbols.filter((ele) => ele.instrument == symbol);
-  //     let result = filterSymbolName[0];
+  // Calculate the total price of all instruments
+  const totalPrice = orderHistory.reduce(
+    (sum, inst) => sum + inst.currentPrice * inst.quantity,
+    0
+  );
 
-  //     if (result !== undefined) {
-  //       return result.name;
-  //     }
-  //   }
+  // Function to calculate weightage
+  const calculateWeightage = (inst) => {
+    const instrumentPrice = inst.currentPrice * inst.quantity;
+    return ((instrumentPrice / totalPrice) * 100).toFixed(2);
+  };
 
-  //   return symbol; // Return an empty string if the symbol is not found or invalid
-  // };
+  console.log(orderHistory,"order history")
 
 
   return (
@@ -104,7 +105,7 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
                     } // Adjust this if needed
                     mr={2}
                   />
-                  <Text fontSize="lg" fontWeight="500" 
+                  <Text fontSize="md" fontWeight="500" 
                     //  fontSize="lg"
                     //  fontWeight="500"
                      lineHeight="24px"
@@ -119,7 +120,7 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
                   <Text
                     fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                    
-                    fontSize="xl"
+                    fontSize="lg"
                     fontWeight="500"
                     lineHeight="22px"
                     textAlign="right"
@@ -135,7 +136,7 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
                   <Text
                     fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
                    
-                    fontSize="xl"
+                    fontSize="lg"
                     fontWeight="500"
                     lineHeight="18px"
                     textAlign="right"
@@ -174,7 +175,7 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
                     lineHeight="22px"
                     textAlign="left" // Align text to the left
                   >
-                    2%
+                    {calculateWeightage(inst)}%
                   </Text>
                 </Box>
 

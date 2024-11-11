@@ -17,6 +17,18 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
     return upsidePotentialPercentage < 0 ? 0 : upsidePotentialPercentage;
   };
 
+   // Calculate the total price of all instruments
+   const totalPrice = filteredInstruments.reduce(
+    (sum, inst) => sum + inst.currentPrice * inst.quantity,
+    0
+  );
+
+  // Function to calculate weightage
+  const calculateWeightage = (inst) => {
+    const instrumentPrice = inst.currentPrice * inst.quantity;
+    return ((instrumentPrice / totalPrice) * 100).toFixed(2);
+  };
+
   return (
     <Box className="basket-constituents" p={4}>
       <Text fontSize="md" fontWeight="bold" mb={4} fontFamily={"Helvetica"}>
@@ -30,7 +42,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
           <Box
             key={`inst_${index}`}
             className="new-constituent-item"
-            mb={4}
+            // mb={4}
             mt={4}
             p={4}
             bg={"#262A33"}
@@ -46,7 +58,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
                   color={handleUpsidePotentialPercentage(inst) > 0 ? "#1DD75B" : "#1DD75B"}
                   mr={2}
                 />
-                <Text fontSize="md" fontWeight="semibold">
+                <Text  fontSize="14px" fontWeight="500" lineHeight={"22px"} fontFamily={"Helvetica"}>
                   {inst?.instrument}
                 </Text>
               </Flex>
@@ -56,7 +68,7 @@ const BasketConstituents = ({ basketData, orderHistory, newInstrumentsData }) =>
                     Weightage:
                   </Text>
                   <Text fontFamily="Inter" fontSize="11px" fontWeight="400" width="85px">
-                    {inst?.allocation || "8%"}
+                    {calculateWeightage(inst)}%
                   </Text>
                 </Box>
                 <Box display="flex" alignItems="center" gap={2}>

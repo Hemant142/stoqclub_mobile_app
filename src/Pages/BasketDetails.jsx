@@ -41,20 +41,19 @@ export default function BasketDetails() {
   const [upsidePotentialPercentage, setUpsidePotentialPercentage] = useState(0);
   const [lineChartData, setLineChartData] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
-  const [basketHistory,setBasketHistory] = useState([]) 
-  const [basketCalculation,setBasketCalculation] = useState({})
+  const [basketHistory, setBasketHistory] = useState([]);
+  const [basketCalculation, setBasketCalculation] = useState({});
   const [underlyingIndexLineChart, setUnderlyingIndexLineChart] = useState([]);
   const [rebalancingList, setRebalancingList] = useState([]);
-  const [isRebalancing,setIsRebalancing]=useState(true)
-  const [isRebalancingSuccess,setIsRebalancingSuccess]=useState(true)
+  const [isRebalancing, setIsRebalancing] = useState(true);
+  const [isRebalancingSuccess, setIsRebalancingSuccess] = useState(true);
   const [basketExpired, setBasketExpired] = useState(false);
-
+  console.log(basketCalculation, "basketCalculation");
   let userId = Cookies.get("user2Id_client");
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
   const { isLoading, newInstrumentsData, basketData } = useSelector(
     (store) => store.basketReducer
   );
-
 
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
@@ -93,33 +92,32 @@ export default function BasketDetails() {
         console.log(error, "Get ORder History Error");
       });
 
-      dispatch(getBasketHistory(id, token))
+    dispatch(getBasketHistory(id, token))
       .then((res) => {
-   
-      if(res.data.status==="success"){
-        setBasketHistory(res.data.data.orderList)
-      }
+        if (res.data.status === "success") {
+          setBasketHistory(res.data.data.orderList);
+        }
       })
       .catch((error) => {
         console.log(error, "Get Basket History Error");
       });
 
-      dispatch(getBasketCalculation(id, token))
+    dispatch(getBasketCalculation(id, token))
       .then((res) => {
-      if(res.data.status==="success"){
-        setBasketCalculation(res.data.data)
-      }
+        if (res.data.status === "success") {
+          setBasketCalculation(res.data.data);
+        }
       })
       .catch((error) => {
         console.log(error, "Get Basket History Error");
       });
 
     dispatch(getBalance(token));
-  }, [token,isRebalancingSuccess]);
+  }, [token, isRebalancingSuccess]);
 
-  const RebalancingSuccess=()=>{
-    setIsRebalancingSuccess(!isRebalancingSuccess)
-  }
+  const RebalancingSuccess = () => {
+    setIsRebalancingSuccess(!isRebalancingSuccess);
+  };
 
   useEffect(() => {
     if (basketData && newInstrumentsData) {
@@ -170,7 +168,7 @@ export default function BasketDetails() {
     };
 
     checkIfExpired();
-    
+
     // Optional: Check every minute to update expiration in real-time
     const intervalId = setInterval(checkIfExpired, 60000);
     return () => clearInterval(intervalId);
@@ -178,25 +176,27 @@ export default function BasketDetails() {
 
   useEffect(() => {
     const now = new Date(); // Get the current date and time
-  
+
     // Filter instruments within the last 12 hours and not present in orderHistory
-    const filteredRebalancingList = newInstrumentsData.filter((newInstrument) => {
-      const statusDate = new Date(newInstrument.statusDate); // Convert statusDate to a Date object
-  
-      // Check if the instrument is not in orderHistory
-      const isNotInOrderHistory = !orderHistory.some(
-        (order) => order.instrument === newInstrument.instrument
-      );
-  
-      // Check if the statusDate is within the last 12 hours
-      const isWithin12Hours = now - statusDate <= 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-  
-      return isWithin12Hours && isNotInOrderHistory;
-    });
-  
+    const filteredRebalancingList = newInstrumentsData.filter(
+      (newInstrument) => {
+        const statusDate = new Date(newInstrument.statusDate); // Convert statusDate to a Date object
+
+        // Check if the instrument is not in orderHistory
+        const isNotInOrderHistory = !orderHistory.some(
+          (order) => order.instrument === newInstrument.instrument
+        );
+
+        // Check if the statusDate is within the last 12 hours
+        const isWithin12Hours = now - statusDate <= 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+
+        return isWithin12Hours && isNotInOrderHistory;
+      }
+    );
+
     // Update the isRebalancing state if any items match the criteria
     setIsRebalancing(filteredRebalancingList.length > 0);
-  
+
     // Loop through orderHistory to include only necessary entries in rebalancing list
     orderHistory.forEach((order) => {
       const entryOrder = basketData.instrumentList.find(
@@ -207,7 +207,7 @@ export default function BasketDetails() {
         (item) =>
           item.instrument === order.instrument && item.orderType === "Exit"
       );
-  
+
       // If both entry and exit exist, include only the exit in rebalancing
       if (
         entryOrder &&
@@ -229,12 +229,15 @@ export default function BasketDetails() {
         filteredRebalancingList.push(entryOrder);
       }
     });
-  
+
     // Update the rebalancing list state with the filtered instruments
     setRebalancingList(filteredRebalancingList);
-  }, [newInstrumentsData, orderHistory, basketData.instrumentList, isRebalancingSuccess]);
-  
-
+  }, [
+    newInstrumentsData,
+    orderHistory,
+    basketData.instrumentList,
+    isRebalancingSuccess,
+  ]);
 
   // Function to generate last 6 months data for both Basket and Underlying Index
   const generateLast6MonthsData = () => {
@@ -297,8 +300,6 @@ export default function BasketDetails() {
     return Number(upsidePotential);
   };
 
-
-
   return (
     <Box>
       {Object.keys(basketData).length === 0 ? (
@@ -337,28 +338,32 @@ export default function BasketDetails() {
             <Box>
               <BackArrow />
               <DesktopWarning />
-              <BasketComponent basketData={basketData} basketLastMonthReturn={basketCalculation?.basketLastMonthReturn } />
-          
-{/* {Object.keys(basketCalculation).length > 0 && ( */}
-  <StatsComponent
-    basketData={basketData}
-    upsidePotential={basketCalculation?.potentialUpside || 0}
-    upsidePotentialPercentage={basketCalculation?.potentialUpsidePC || 0}
-    minAmount={minAmount || 0}
-    threeYearCAGR={basketCalculation?.["3YearCAGR"] || 0}
-    oneYearReturn={basketCalculation?.["1YearReturn"] || 0}
-  />
-  
-{/* )} */}
+              <BasketComponent
+                basketData={basketData}
+                basketLastMonthReturn={basketCalculation?.basketLastMonthReturn}
+              />
 
-<LineGraph
-  lineChartData={basketCalculation.basketValue || []}
-  underlyingIndexLineChart={basketCalculation.underlineValue || []}
-  underlyingIndex={basketData.underlyingIndex || ''}
+              {/* {Object.keys(basketCalculation).length > 0 && ( */}
+              <StatsComponent
+                basketData={basketData}
+                upsidePotential={basketCalculation?.potentialUpside || 0}
+                upsidePotentialPercentage={
+                  basketCalculation?.potentialUpsidePC || 0
+                }
+                minAmount={minAmount || 0}
+                threeYearCAGR={basketCalculation?.["3YearCAGR"] || 0}
+                oneYearReturn={basketCalculation?.["1YearReturn"] || 0}
+              />
+
+              {/* )} */}
+
+              <LineGraph
+  lineChartData={(basketCalculation.basketValue || []).slice().reverse()}
+  underlyingIndexLineChart={(basketCalculation.underlineValue || []).slice().reverse()}
+  underlyingIndex={basketData.underlyingIndex || ""}
 />
 
 
-             
               <InvestmentInfo basketData={basketData} />
 
               <Divider
@@ -369,21 +374,24 @@ export default function BasketDetails() {
                 border="1px solid #BCC1CA" // Adds the solid border with the specified color
                 position="relative"
               />
-              {orderHistory.length>0&&
-              <MyBasketConstituents
-              basketData={basketData}
-              newInstrumentsData={newInstrumentsData}
-              orderHistory={orderHistory}
-              />
-              }
+              {orderHistory.length > 0 && (
+                <MyBasketConstituents
+                  basketData={basketData}
+                  newInstrumentsData={newInstrumentsData}
+                  orderHistory={orderHistory}
+                />
+              )}
+              {orderHistory.length === 0 && (
+                <BasketConstituents
+                  basketData={basketData}
+                  newInstrumentsData={newInstrumentsData}
+                  orderHistory={orderHistory}
+                />
+              )}
 
-              <BasketConstituents
-                basketData={basketData}
-                newInstrumentsData={newInstrumentsData}
-                orderHistory={orderHistory}
-              />
-
-              {orderHistory.length>0 &&rebalancingList.length > 0 &&isRebalancing   ? (
+              {orderHistory.length > 0 &&
+              rebalancingList.length > 0 &&
+              isRebalancing ? (
                 <Box>
                   <Divider
                     ml={2}
@@ -394,7 +402,11 @@ export default function BasketDetails() {
                     position="relative"
                   />
 
-                  <Rebalancing rebalancingList={rebalancingList} id={id} RebalancingSuccess={RebalancingSuccess} />
+                  <Rebalancing
+                    rebalancingList={rebalancingList}
+                    id={id}
+                    RebalancingSuccess={RebalancingSuccess}
+                  />
 
                   <Divider
                     ml={2}
@@ -418,8 +430,6 @@ export default function BasketDetails() {
 
               <Activity basketData={basketData} orderHistory={orderHistory} />
 
-
-
               <Divider
                 ml={2}
                 mr={2}
@@ -429,37 +439,36 @@ export default function BasketDetails() {
                 position="relative"
               />
 
-            {basketHistory.length>0&&(<Box>
-              <YourActivity basketHistory={basketHistory.reverse()}/>
-                
-          
-                <Divider
-                ml={2}
-                mr={2}
-                m="auto"
-                width="350px" // Sets the width
-                border="1px solid #BCC1CA" // Adds the solid border with the specified color
-                position="relative"
-              />
+              {basketHistory.length > 0 && (
+                <Box>
+                  <YourActivity basketHistory={basketHistory.reverse()} />
 
-            </Box>)}
-              
+                  <Divider
+                    ml={2}
+                    mr={2}
+                    m="auto"
+                    width="350px" // Sets the width
+                    border="1px solid #BCC1CA" // Adds the solid border with the specified color
+                    position="relative"
+                  />
+                </Box>
+              )}
+
               <AboutCentrum basketData={basketData} id={id} />
- {basketExpired===false && (
-   <InvestmentSection
-   basketId={id}
-   minReq={minAmount || 0} // Provide a default value if fundRequired is undefined
-   basketName={basketData.title || "N/A"} // Provide a default if title is undefined
-   currentBalance={Number(currentBalance) || 0} // Provide a default if currentBalance is undefined
-   instrumentList={newInstrumentsData || []} // Provide a default if instrumentList is undefined
-   upsidePotential={upsidePotential || 0}
-   orderHistory={orderHistory.length}
-   upsidePotentialPercentage={
-     Number(upsidePotentialPercentage) || 0
-   }
- />
- )}
-             
+              {basketExpired === false && (
+                <InvestmentSection
+                  basketId={id}
+                  minReq={minAmount || 0} // Provide a default value if fundRequired is undefined
+                  basketName={basketData.title || "N/A"} // Provide a default if title is undefined
+                  currentBalance={Number(currentBalance) || 0} // Provide a default if currentBalance is undefined
+                  instrumentList={newInstrumentsData || []} // Provide a default if instrumentList is undefined
+                  upsidePotential={upsidePotential || 0}
+                  orderHistory={orderHistory.length}
+                  upsidePotentialPercentage={
+                    Number(upsidePotentialPercentage) || 0
+                  }
+                />
+              )}
             </Box>
           )}
         </Box>

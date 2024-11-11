@@ -56,12 +56,13 @@ const ConfirmOrder = () => {
   const userId=Cookies.get("userId_client");
   const basketState=Cookies.get("basket-state")
   const [bufferAmount,setBufferAmount]=useState(0)
+  
 const lots=Number(Cookies.get('lots'))
 
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
   const {isLoading,newInstrumentsData,basketData}=useSelector((store) => store.basketReducer);
 
-
+console.log(userId,"userId")
   useEffect(() => {
     dispatch(getBasketDetails(id, token));
     dispatch(getBalance(token));
@@ -335,6 +336,7 @@ const handleConfirmOrder = () => {
       });
   };
 
+  console.log(newInstrumentsData,"newInstrumentsData")
   return (
     <Box >
       <Box p={4} pb={0}>

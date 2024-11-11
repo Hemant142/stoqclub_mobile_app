@@ -17,10 +17,14 @@ const MyBaskets = ({ userInfo }) => {
   if (userInfo.currentHoldings.length === 0) {
     return null; // Return null if the user is a first-time client
   }
- 
+ console.log(userInfo,"userInfo")
   return (
     <section className="my-baskets" bg="darkBackground" alignItems={"left"}>
-      <Heading size="lg" mb={4} fontFamily={"Helvetica"}>
+      <Heading   as="h4"
+          size={{ base: "md", md: "lg" }} // Responsive heading size
+          color="white"
+          fontFamily={"Helvetica"}
+          fontWeight="normal" mb={4}>
         My Baskets
       </Heading>
       {userInfo.currentHoldings && userInfo.currentHoldings.length > 0 ? (
@@ -84,22 +88,21 @@ const MyBaskets = ({ userInfo }) => {
                     flexDirection="column"
                     alignItems="center"
                   >
-                    <Text
-                      fontSize={{ base: "14px", md: "16px" }}
-                      fontWeight="medium"
-                      fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
-                      color={bskt.totalReturns < 0 ? "red.500" : "#1DD75B"}
-                    >
-                      {bskt.totalReturns}
-                      <span
-                        style={{
-                          color:
-                            bskt.percentageReturns < 0 ? "red.500" : "#1DD75B",
-                        }}
-                      >
-                        ({bskt.percentageReturns}%)
-                      </span>
-                    </Text>
+                  <Text
+  fontSize={{ base: "14px", md: "16px" }}
+  fontWeight="medium"
+  fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+  color={bskt.totalReturns < 0 ? "#E05858" : "#1DD75B"}
+>
+  {bskt.totalReturns}
+  <Text
+    as="span"
+    color={bskt.percentageReturns < 0 ? "#E05858" : "#1DD75B"}
+  >
+    ({bskt.percentageReturns}%)
+  </Text>
+</Text>
+
                   </Box>
                 </Flex>
 

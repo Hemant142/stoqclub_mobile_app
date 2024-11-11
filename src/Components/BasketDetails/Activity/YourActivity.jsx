@@ -40,7 +40,7 @@ export default function YourActivity({ basketHistory }) {
 
   return (
     <Box p={4}>
-      <Text fontSize="xl" fontWeight="bold" mb={4}>
+      <Text fontSize="md" fontWeight="bold" mb={4} fontFamily={"Helvetica"}>
         Your Activity
       </Text>
       <Box
@@ -63,10 +63,10 @@ export default function YourActivity({ basketHistory }) {
                 m={"4%"}
                 display="flex"
                 alignItems="center"
-                gap={4}
+                gap={2}
                 width="100%"
               >
-                <Flex align="center" gap={2} width="50%">
+                <Flex align="center" gap={2} width="48%" >
                   <Icon as={CiCircleCheck} boxSize={5} color="#1DD75B" />
                   <Text fontFamily="Inter" fontSize="12px" fontWeight="500" textAlign="left">
                     {historyFormatDate(inst?.date)}
@@ -74,6 +74,7 @@ export default function YourActivity({ basketHistory }) {
                 </Flex>
 
                 <Text
+              
                   fontFamily="Inter"
                   fontSize="12px"
                   fontWeight="500"

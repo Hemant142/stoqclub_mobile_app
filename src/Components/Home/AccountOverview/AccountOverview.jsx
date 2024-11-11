@@ -58,7 +58,7 @@ function AccountOverview({ userInfo }) {
 
             <HStack spacing={1} align="center">
               <Heading
-                color="#4CE77F"
+                color="#1DD75B"
                 fontSize="xl"
                 lineHeight="1"
                 verticalAlign="middle"
@@ -91,7 +91,7 @@ function AccountOverview({ userInfo }) {
 
             <HStack spacing={1} align="center">
               <Heading
-                color="#4CE77F"
+                color="#1DD75B"
                 fontSize="xl"
                 lineHeight="1"
                 verticalAlign="middle"
@@ -186,7 +186,7 @@ function AccountOverview({ userInfo }) {
               Invested
             </Text>
             <HStack>
-              <Text color="#4CE77F">₹</Text>
+              <Text color="#1DD75B">₹</Text>
               <Text
                 sx={{
                   fontFamily:
@@ -216,7 +216,7 @@ function AccountOverview({ userInfo }) {
               Current Value
             </Text>
             <HStack>
-              <Text color="#4CE77F">₹</Text>
+              <Text color="#1DD75B">₹</Text>
               <Text
                 sx={{
                   fontFamily:
@@ -273,14 +273,14 @@ function AccountOverview({ userInfo }) {
     {userInfo.totalPercentageReturns >0 ? (
       <Icon as={FaCaretUp} color="#1DD75B" boxSize="14px" /> // Make the icon smaller
     ) : (
-      <Icon as={FaCaretDown} color="red.400" boxSize="14px" />
+      <Icon as={FaCaretDown} color="#E05858" boxSize="14px" />
     )}
     <Text
       fontSize="12px" // Make the percentage text smaller
       fontWeight="bold"
       fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
       color={
-        userInfo.totalPercentageReturns >0 ? "#1DD75B" : "red.400"
+        userInfo.totalPercentageReturns >0 ? "#1DD75B" : "#E05858"
       }
     >
       {userInfo.totalPercentageReturns ? `${userInfo.totalPercentageReturns.toLocaleString('en-IN')}%` : `0%`}
@@ -298,7 +298,7 @@ function AccountOverview({ userInfo }) {
                 fontWeight: "600",
                 lineHeight: "30px",
                 textAlign: "right", // Align text to the right
-                color: "#1DD75B",
+                color:userInfo.totalReturns > 0 ? "#1DD75B" : "white" // Conditional color
               }}
             >
               ₹ {userInfo.totalReturns !==undefined ?userInfo.totalReturns.toLocaleString('en-IN') : 0}

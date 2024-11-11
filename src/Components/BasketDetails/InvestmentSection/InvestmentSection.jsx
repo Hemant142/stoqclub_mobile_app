@@ -416,7 +416,7 @@ const InvestmentSection = (props) => {
       {showInvestmentOptions && (
         <>
           <Text
-            width="188px"
+            // width="188px"
             height="22px"
             fontFamily="Inter"
             fontSize="14px"
@@ -448,7 +448,7 @@ const InvestmentSection = (props) => {
               color="#FFFFFF"
               mt={4}
             >
-              Amount: <strong>₹{amountToInvest}</strong>
+              Amount: ₹{amountToInvest}
             </Text>
             <Text
               fontSize="14px"
@@ -459,7 +459,7 @@ const InvestmentSection = (props) => {
               color="#FFFFFF"
               mt={4}
             >
-              Current Balance: <strong>₹{currentBalance}</strong>
+              Current Balance: ₹{currentBalance}
             </Text>
             <Text fontSize="lg"></Text>
           </Box>
@@ -535,27 +535,27 @@ const InvestmentSection = (props) => {
             </Box>
 
             <Box>
-              <Button
-                color="#1DD75B"
-                size="lg"
-                height="60px" // Adjusted height
-                width="160px" // Adjusted width
-                border="1px solid #1DD75B"
-                variant="outline"
-                _hover={{
-                  boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
-                  transform: "scale(1.05)",
-                }}
-                _active={{
-                  boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
-                  transform: "scale(0.95)",
-                }}
-                onClick={handleBuyClick}
-                isLoading={apiLoader}
-              >
-                Invest
-              </Button>
-            </Box>
+      <Button
+        color="#1DD75B"
+        size="lg"
+        height="60px"
+        width="160px"
+        border="1px solid #1DD75B"
+        variant="outline"
+        _hover={{
+          boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+          transform: "scale(1.05)",
+        }}
+        _active={{
+          boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
+          transform: "scale(0.95)",
+        }}
+        onClick={handleBuyClick}
+        isLoading={apiLoader}
+      >
+        Invest
+      </Button>
+    </Box>
           </Box>
         </>
       )}

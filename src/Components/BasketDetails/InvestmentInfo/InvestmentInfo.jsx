@@ -23,8 +23,9 @@ const InvestmentInfo = ({ basketData }) => {
     
 
   return (
-    <Box position="relative" mb="45px"
-  
+    <Box position="relative"
+    mb={4}
+  // border={"1px solid red"}
     className="investment-info" p={4} >
       <Heading
         as="h4"

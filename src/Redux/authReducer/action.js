@@ -36,6 +36,7 @@ export const otpSend=(token)=>(dispatch)=>{
   )
 
 }
+
 export const clientToken = (data) => (dispatch) => {
 
     dispatch({ type: USER_LOADING });
@@ -65,7 +66,6 @@ export const getUserInfo=(token)=>(dispatch)=>{
     console.log(error,"Error getUserInfo")
   })
 }
-
 
 export const getBalance = (token) => (dispatch) => {
   return axios

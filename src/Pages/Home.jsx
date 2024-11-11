@@ -75,7 +75,7 @@ export default function Home() {
       ? `${firstName.slice(0, MAX_NAME_LENGTH)}...`
       : firstName; // Truncate if longer than the limit
 
-  console.log(userDetails, "userDetails");
+ 
   return (
     <Box>
       {Object.keys(userDetails).length === 0 ? (

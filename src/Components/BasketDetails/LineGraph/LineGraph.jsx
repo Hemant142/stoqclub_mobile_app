@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex }) => {
   
   // Merging data based on month
+
   const mergedData = lineChartData.map((d) => {
     const correspondingUnderlying = underlyingIndexLineChart.find(
       (underlying) => underlying.month === d.month
@@ -16,10 +17,28 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
     };
   });
 
+  // Function to abbreviate month names
+  const abbreviateMonth = (month) => {
+    const monthAbbreviations = {
+      January: "JAN",
+      February: "FEB",
+      March: "MAR",
+      April: "APR",
+      May: "MAY",
+      June: "JUN",
+      July: "JUL",
+      August: "AUG",
+      September: "SEP",
+      October: "OCT",
+      November: "NOV",
+      December: "DEC"
+    };
+    return monthAbbreviations[month] || month;
+  };
+
   return (
     <Box
       className="chart"
-      mb={4}
       p={4} // Reduced padding for better fit on mobile
       textAlign="center"
     >
@@ -37,6 +56,7 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
             dataKey="month"
             tick={{ fontSize: 10 }} // Smaller font size for mobile
             interval={0} // Show all ticks
+            tickFormatter={abbreviateMonth} // Format month abbreviations
           />
           <Tooltip />
 
@@ -74,7 +94,6 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
         outperformed the <span style={{ color: "#ED7D2D" }}>{underlyingIndex}</span>{" "}
         Index by <span style={{ color: "#1DD75B" }}>8%</span>
       </Text>
-
       <Divider
         ml={2}
         mr={2}

@@ -36,7 +36,7 @@ const Activity = ({ basketData }) => {
 
   return (
     <Box p={4}>
-      <Text fontSize="xl" fontWeight="bold" mb={4}> {/* Reduced from 2xl to xl */}
+      <Text fontSize="md" fontWeight="bold" fontFamily={"Helvetica"} mb={4}> {/* Reduced from 2xl to xl */}
         Basket Activity
       </Text>
       <Box
@@ -45,8 +45,8 @@ const Activity = ({ basketData }) => {
         borderRadius="md"
         boxShadow="md"
       >
-        <Box m={"4%"} display="flex" alignItems="center" gap={4} width="100%">
-          <Flex align="center" gap={2} width="30%">
+        <Box m={"4%"} display="flex" alignItems="center" gap={2} width="100%">
+          <Flex align="center" gap={2} width="40%">
             <Icon as={CiCircleCheck} boxSize={5} color="#1DD75B" /> {/* Reduced icon size */}
             <Text fontFamily="Inter" fontSize="12px" fontWeight="500" textAlign="left">
               {historyFormatDate(basketData?.creationDate)}
@@ -72,7 +72,7 @@ const Activity = ({ basketData }) => {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           {currentItems?.length > 0 ? (
-            currentItems.map((inst, index) => (
+            currentItems.reverse().map((inst, index) => (
               <Box
                 key={`inst_${index}`}
                 m={"4%"}
@@ -81,7 +81,7 @@ const Activity = ({ basketData }) => {
                 gap={4}
                 width="100%"
               >
-                <Flex align="center" gap={2} width="30%">
+                <Flex align="center" gap={2} width="40%">
                   <Icon as={CiCircleCheck} boxSize={5} color="#1DD75B" /> {/* Reduced icon size */}
                   <Text fontFamily="Inter" fontSize="12px" fontWeight="500" textAlign="left">
                     {historyFormatDate(inst?.statusDate)}

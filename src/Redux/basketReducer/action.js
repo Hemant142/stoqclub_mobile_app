@@ -121,7 +121,6 @@ export const getOrderHistory=(basketId,token)=>(dispatch)=>{
   );
 }
 
-
 export const getBasketHistory=(basketId,token)=>(dispatch)=>{
   return axios.get(
     `${NewURL}app/client/get-basket-history?basketId=${basketId}`,
@@ -157,7 +156,6 @@ export const OrderPlaced = (id, lot, token) => (dispatch) => {
   );
 };
 
-
 export const RebalancingNewOrder=(id,token)=>(dispatch)=>{
   return axios.post(
     `${NewURL}app/client/rebalance-new-order?basketId=${id}`,
@@ -169,9 +167,6 @@ export const RebalancingNewOrder=(id,token)=>(dispatch)=>{
     }
   );
 }
-
-
-
 
 export const basket_order_exit=(id,token)=>(dispatch)=>{
   return axios.post(
