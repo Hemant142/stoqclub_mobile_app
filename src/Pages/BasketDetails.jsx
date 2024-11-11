@@ -51,6 +51,7 @@ export default function BasketDetails() {
   console.log(basketCalculation, "basketCalculation");
   let userId = Cookies.get("user2Id_client");
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
+  // const currentBalance= 2000
   const { isLoading, newInstrumentsData, basketData } = useSelector(
     (store) => store.basketReducer
   );

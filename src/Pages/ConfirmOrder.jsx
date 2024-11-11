@@ -367,8 +367,8 @@ const handleConfirmOrder = () => {
           size="md"
           fontFamily="Epilogue"
           fontSize={{ base: "20px", md: "30px" }} // Slightly smaller font: 20px for mobile and 28px for larger screens
-          fontWeight="bold"
-          lineHeight={{ base: "28px", md: "36px" }} // Adjust line height accordingly
+          fontWeight="700"
+          lineHeight={{ base: "30px", md: "36px" }} // Adjust line height accordingly
           textAlign="left" // Center the text horizontally
           // mt={4}
         >
@@ -412,8 +412,8 @@ const handleConfirmOrder = () => {
           size="md"
           fontFamily="Epilogue"
           fontSize={{ base: "20px", md: "30px" }} // Slightly smaller font: 20px for mobile and 28px for larger screens
-          fontWeight="bold"
-          lineHeight={{ base: "28px", md: "36px" }} // Adjust line height accordingly
+          fontWeight="700"
+          lineHeight={{ base: "30px", md: "36px" }} // Adjust line height accordingly
           textAlign="left" // Center the text horizontally
           // mt={4}
         >

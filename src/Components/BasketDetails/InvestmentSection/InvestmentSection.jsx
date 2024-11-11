@@ -121,7 +121,7 @@ const InvestmentSection = (props) => {
   const decreaseLot = () => {
     if (lots > 1) {
       const newLots = lots - 1;
-      const newAmount = minReqAmt / newLots;
+      const newAmount = amountToInvest - minReqAmt;
       setLots(newLots);
       setAmountToInvest(newAmount);
     } else {
