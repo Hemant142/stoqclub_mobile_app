@@ -147,6 +147,7 @@ const InvestmentSection = (props) => {
       // Pass lot and amount to the Confirm Order page
       Cookies.set("lots", lots);
       Cookies.set("basket-state", "Invest");
+      Cookies.set('amountToInvest',amountToInvest)
       navigate(`/confirm-order/${basketId}`, {
         state: {
           lots: lots,

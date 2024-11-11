@@ -55,6 +55,7 @@ const ConfirmOrder = () => {
   const token = Cookies.get("login_token_client");
   const userId=Cookies.get("userId_client");
   const basketState=Cookies.get("basket-state")
+  // const amountToInvest=Cookies.get('amountToInvest')
   const [bufferAmount,setBufferAmount]=useState(0)
   
 const lots=Number(Cookies.get('lots'))
@@ -189,7 +190,7 @@ navigate(`/basket/${id}`)
     
   
       // Set the calculated values in the state
-      setAmountToInvest(total);
+      setAmountToInvest(total*lots);
 
     }
   }, [basketData]);
