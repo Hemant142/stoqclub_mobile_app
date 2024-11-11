@@ -50,9 +50,9 @@ export default function AboutCentrum({ basketData, id }) {
 
         {/* Move this Box and make sure it's aligned properly below the text */}
         <Box display="flex" justifyContent="flex-start" marginTop="10px">
-          <Link as={RouterLink} to={`/disclosure/${id}`} color="#ED7D2D">
+          <Link as={RouterLink} to={`/disclosure/${id}`} color="#A7ADB7">
             <Text fontSize="sm" fontWeight="400"   fontFamily="Inter"  lineHeight="22px" textDecoration="none">
-              Cost & Disclosures
+               Disclosures
             </Text>
           </Link>
         </Box>

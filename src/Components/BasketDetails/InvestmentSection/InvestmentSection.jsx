@@ -461,7 +461,7 @@ const InvestmentSection = (props) => {
             >
               Current Balance: ₹{currentBalance}
             </Text>
-            <Text fontSize="lg"></Text>
+          
           </Box>
 
           <Box
@@ -473,53 +473,54 @@ const InvestmentSection = (props) => {
             // p={2}  // Padding around the box
           >
             <Box>
-              <HStack spacing={4} mt={2}>
-                <Button
-                  colorScheme="white"
-                  variant="outline"
-                  _hover={{
-                    boxShadow: "0 0 10px white",
-                    transform: "scale(1.05)",
-                  }}
-                  size="sm"
-                  _active={{
-                    boxShadow: "0 0 15px white",
-                    transform: "scale(0.95)",
-                  }}
-                  onClick={decreaseLot}
-                  disabled={lots <= 1}
-                >
-                  <Icon as={MinusIcon} />
-                </Button>
+            <HStack spacing={2} mt={2}> {/* Reduced spacing from 4 to 2 */}
+  <Button
+    colorScheme="white"
+    variant="outline"
+    _hover={{
+      boxShadow: "0 0 10px white",
+      transform: "scale(1.05)",
+    }}
+    size="sm"
+    _active={{
+      boxShadow: "0 0 15px white",
+      transform: "scale(0.95)",
+    }}
+    onClick={decreaseLot}
+    disabled={lots <= 1}
+  >
+    <Icon as={MinusIcon} />
+  </Button>
 
-                <Input
-                  value={lots}
-                  readOnly
-                  textAlign="center"
-                  width="40px" // Reduced input width for a smaller size
-                  fontWeight="bold"
-                  fontSize="sm" // Set font size to small
-                />
+  <Text
+    fontWeight="bold"
+    fontSize="sm"
+    textAlign="center"
+    width="40px"
+  >
+    {lots}
+  </Text>
 
-                <Button
-                  size="sm"
-                  color="#1DD75B"
-                  border="1px solid #1DD75B"
-                  _hover={{
-                    boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
-                    transform: "scale(1.05)",
-                  }}
-                  _active={{
-                    boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
-                    transform: "scale(0.95)",
-                  }}
-                  variant="outline"
-                  onClick={increaseLot}
-                  disabled={amountToInvest >= currentBalance}
-                >
-                  <Icon as={AddIcon} />
-                </Button>
-              </HStack>
+  <Button
+    size="sm"
+    color="#1DD75B"
+    border="1px solid #1DD75B"
+    _hover={{
+      boxShadow: "0 0 10px rgba(29, 215, 91, 0.7)",
+      transform: "scale(1.05)",
+    }}
+    _active={{
+      boxShadow: "0 0 15px rgba(29, 215, 91, 1)",
+      transform: "scale(0.95)",
+    }}
+    variant="outline"
+    onClick={increaseLot}
+    disabled={amountToInvest >= currentBalance}
+  >
+    <Icon as={AddIcon} />
+  </Button>
+</HStack>
+
 
               <Text
                 fontSize="14px"
