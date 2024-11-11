@@ -67,7 +67,7 @@ const Disclosure = () => {
       <OrderedList spacing={4}>
         <ListItem>
           <Text fontWeight="bold">Regulatory Authority:</Text>
-          Centrum Broking Limited ("Centrum") is a registered stock broker with the Securities and Exchange Board of India (SEBI) under registration number INZ000179135 and is a member of the Bombay Stock Exchange (BSE), National Stock Exchange (NSE), and Multi Commodity Exchange (MCX).
+          Centrum Broking Limited ("Centrum") is a registered stock broker with the Securities and Exchange Board of India (SEBI) under registration number INH000001469 and is a member of the Bombay Stock Exchange (BSE), National Stock Exchange (NSE), and Multi Commodity Exchange (MCX).
         </ListItem>
 
         <ListItem>

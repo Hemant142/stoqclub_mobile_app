@@ -94,7 +94,8 @@ export default function Home() {
                   as="h2"
                   fontFamily="Helvetica"
                   fontSize="30px"
-                  fontWeight="normal"
+
+                  fontWeight="500"
                   color="white"
                 >
                   {`Hi, ${truncatedName} !`}
