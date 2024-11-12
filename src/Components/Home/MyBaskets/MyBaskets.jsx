@@ -24,7 +24,9 @@ const MyBaskets = ({ userInfo }) => {
           size={{ base: "md", md: "lg" }} // Responsive heading size
           color="white"
           fontFamily={"Helvetica"}
-          fontWeight="normal" mb={4}>
+          fontSize="20px"
+            lineHeight="30px"
+          fontWeight="500" mb={4}>
         My Baskets
       </Heading>
       {userInfo.currentHoldings && userInfo.currentHoldings.length > 0 ? (

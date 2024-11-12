@@ -31,10 +31,13 @@ const CentrumSpecials = ({ allBasketsApiLoading, allBaskets }) => {
       <HStack spacing={2} mb={4} fontFamily={"Epilogue"}>
         <Heading
           as="h4"
+          fontSize="20px"
+        fontWeight="500"
+          lineHeight="30px"
           size={{ base: "md", md: "lg" }} // Responsive heading size
           color="white"
           fontFamily={"Helvetica"}
-          fontWeight="normal"
+         
         >
           Centrum Specials
         </Heading>

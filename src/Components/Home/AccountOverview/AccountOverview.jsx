@@ -29,8 +29,8 @@ function AccountOverview({ userInfo }) {
       >
         <Heading
           fontFamily={"Helvetica"}
-          fontSize="20px"
-          fontWeight="normal"
+         fontSize="20px"
+        fontWeight="500"
           lineHeight="30px"
           textAlign="left"
           color="white"
@@ -123,10 +123,12 @@ function AccountOverview({ userInfo }) {
       >
         <Heading
           color="white"
-          fontSize="lg"
+       
           fontFamily={"Helvetica"}
           mb={4}
-          fontWeight={500}
+            lineHeight="30px"
+          fontSize="20px"
+        fontWeight="500"
         >
           Start your wealth creation journey
         </Heading>

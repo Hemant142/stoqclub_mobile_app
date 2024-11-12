@@ -87,14 +87,15 @@ export default function Home() {
             justifyContent="space-between"
             alignItems="center"
             mb={10}
+         
           >
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" >
               <Tooltip label={firstName} aria-label="Full name tooltip">
                 <Heading
                   as="h2"
                   fontFamily="Helvetica"
-                  fontSize="30px"
-
+                  fontSize="27px"
+                  lineHeight="30px"
                   fontWeight="500"
                   color="white"
                 >

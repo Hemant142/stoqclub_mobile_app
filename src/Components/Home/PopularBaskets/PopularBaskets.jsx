@@ -39,6 +39,7 @@ const PopularBaskets = ({ allBasketsApiLoading, allBaskets }) => {
       <Heading
         fontSize="20px"
         fontWeight="500"
+          lineHeight="30px"
         mb="1.4rem"
         textAlign="left"
         fontFamily={"Helvetica"}
