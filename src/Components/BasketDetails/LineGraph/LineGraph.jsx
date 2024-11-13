@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Divider, Text } from "@chakra-ui/react";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex }) => {
+const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex,sixMonthsReturns }) => {
   
   // Merging data based on month
 
@@ -92,7 +92,7 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex })
       >
         In the last 6 months, the <span style={{ color: "#1DD75B" }}>Basket</span>{" "}
         outperformed the <span style={{ color: "#ED7D2D" }}>{underlyingIndex}</span>{" "}
-        Index by <span style={{ color: "#1DD75B" }}>8%</span>
+        Index by <span style={{ color: "#1DD75B" }}>{sixMonthsReturns}%</span>
       </Text>
       <Divider
         ml={2}

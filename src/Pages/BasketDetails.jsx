@@ -48,7 +48,7 @@ export default function BasketDetails() {
   const [isRebalancing, setIsRebalancing] = useState(true);
   const [isRebalancingSuccess, setIsRebalancingSuccess] = useState(true);
   const [basketExpired, setBasketExpired] = useState(false);
-  console.log(basketCalculation, "basketCalculation");
+
   let userId = Cookies.get("user2Id_client");
   const currentBalance = useSelector((store) => store.authReducer.userBalance);
   // const currentBalance= 2000
@@ -361,6 +361,7 @@ export default function BasketDetails() {
               <LineGraph
   lineChartData={(basketCalculation.basketValue || []).slice().reverse()}
   underlyingIndexLineChart={(basketCalculation.underlineValue || []).slice().reverse()}
+  sixMonthsReturns={basketCalculation.sixMonthsReturns || 0}
   underlyingIndex={basketData.underlyingIndex || ""}
 />
 

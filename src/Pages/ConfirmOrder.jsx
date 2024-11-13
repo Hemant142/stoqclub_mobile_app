@@ -339,7 +339,7 @@ const handleConfirmOrder = () => {
       });
   };
 
-  console.log(newInstrumentsData,"newInstrumentsData")
+
   return (
     <Box >
       <Box p={4} pb={0}>
