@@ -517,7 +517,7 @@ const handleConfirmOrder = () => {
                       fontWeight="400"
                       lineHeight="22px"
                       textAlign="left"
-                      color="#4CE77F"
+                      color="#1DD75B"
                     >
                       BUY
                     </Td>)}

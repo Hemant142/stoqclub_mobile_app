@@ -41,7 +41,7 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
           Min Amount
         </Text>
         <Flex alignItems="center"  marginTop={1}>
-          <Text color="green.400" fontSize="16px"
+          <Text color="#1DD75B" fontSize="16px"
             fontWeight="500" fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
              position="relative" >
             ₹
@@ -90,7 +90,7 @@ const StatsComponent = ({ basketData,minAmount,upsidePotential,upsidePotentialPe
             fontSize="16px"
             fontWeight="500"
             // color="rgba(255, 255, 255, 1)"
-            color="green.400"
+            color="#1DD75B"
             marginTop={1}
           >
             {/* 87% */}
