@@ -125,9 +125,9 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
   const handleResendOTP = async () => {
     try {
       await dispatch(otpSend(authToken));
-
+      setOtp("")
       toast({
-        title: "OTP sent to your registered email!",
+        title: "OTP sent to your registered Mobile!",
         position: "bottom",
         status: "success",
         duration: 2000,
@@ -180,7 +180,7 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
               variant="link"
               colorScheme="blue"
               onClick={handleResendOTP}
-              isDisabled={timer === 60} // Disable resend if timer has just started
+              isDisabled={timer > 0} // Disable resend if timer has just started
             >
               Resend OTP
             </Button>

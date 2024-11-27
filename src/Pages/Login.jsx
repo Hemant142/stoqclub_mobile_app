@@ -35,8 +35,12 @@ const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isOTPDrawerOpen, setIsOTPDrawerOpen] = useState(false);
-  const [attempts, setAttempts] = useState(0);
-  const [lockoutTimer, setLockoutTimer] = useState(0);
+  const [attempts, setAttempts] = useState(
+    parseInt(localStorage.getItem('attemps')) || 0
+  );
+  const [lockoutTimer, setLockoutTimer] = useState(
+    parseInt(localStorage.getItem('lockoutTimer')) || 0
+  );
   const toast = useToast();
   const navigate = useNavigate();
   const dispatch=useDispatch()
@@ -51,8 +55,13 @@ const Login = () => {
         setLockoutTimer((prev) => {
           if (prev === 1) {
             setAttempts(0); // Reset attempts to 0 when timer reaches 0
+          localStorage.removeItem('attemps')
+          localStorage.removeItem('lockoutTimer')
           }
-          return prev - 1;
+          const newTimer = prev-1;
+          localStorage.setItem('lockoutTimer',newTimer);
+
+          return newTimer;
         });
       }, 1000);
       return () => clearInterval(countdown);
@@ -69,7 +78,7 @@ const Login = () => {
       // Dispatch action and handle the promise
       dispatch(clientToken(data))
         .then((res) => {
-         
+       
      Cookies.set('userId',userId)
             // setIsOTPDrawerOpen(true); // Open OTP drawer if login is successful
             if(res.data.status==="failed"){
@@ -98,7 +107,7 @@ const Login = () => {
                 .then((otpResponse) => {
                 
                   toast({
-                    title: "OTP sent to your registered email!",
+                    title: "OTP sent to your registered Mobile!",
                     position: "bottom",
                     status: "success",
                     duration: 2000,
@@ -147,9 +156,11 @@ const Login = () => {
   const handleOTPFailure = () => {
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
+localStorage.setItem('attemps',newAttempts);
 
     if (newAttempts >= 3) {
       setLockoutTimer(300); // 5 minutes
+      localStorage.setItem('lockoutTimer',300)
       setIsOTPDrawerOpen(false);
       toast({
         title: "Maximum attempts reached. Please try again after 5 minutes.",
@@ -260,7 +271,7 @@ const Login = () => {
             justifyContent={"space-between"}
             alignItems="center"
           >
-            {attempts > 0 && (
+            {lockoutTimer > 0 && (
               <Text
                 color="red.500"
                 fontWeight="bold"
@@ -269,13 +280,11 @@ const Login = () => {
                 alignItems="center"
               >
                 <InfoIcon mr={2} /> {/* Info icon for attempts left */}
-                {`You have ${3 - attempts} attempt${
-                  attempts > 1 ? "s" : ""
-                } left.`}
+                {`You have 0 attempts left.`}
               </Text>
             )}
 
-            {lockoutTimer > 0 && attempts >= 3 && (
+            {lockoutTimer > 0  && (
               <Text
                 color="white.500"
                 fontWeight="bold"
@@ -294,6 +303,7 @@ const Login = () => {
           <Button
             leftIcon={<MdLock />} // Add a lock icon to the button
             // colorScheme="green"
+            isDisabled={lockoutTimer > 0}
             color={"#1DD75B"}
             border={"1px solid #1DD75B"}
             size="lg"

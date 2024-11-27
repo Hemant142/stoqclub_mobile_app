@@ -54,7 +54,7 @@ export default function MyBasketConstituents({ basketData, orderHistory, newInst
     return ((instrumentPrice / totalPrice) * 100).toFixed(2);
   };
 
-  console.log(orderHistory,"order history")
+ 
 
 
   return (

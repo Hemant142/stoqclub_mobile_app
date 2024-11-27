@@ -1,5 +1,20 @@
-import React, { useEffect } from "react";
-import { Box, Heading, Image, Tooltip } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Heading,
+  Tooltip,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  useDisclosure,
+  Text,
+  Circle,
+} from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getBalance, getUserInfo } from "../Redux/authReducer/action";
@@ -12,20 +27,16 @@ import { getAllBaskets } from "../Redux/basketReducer/action";
 import CentrumSpecials from "../Components/Home/CentrumSpecials/CentrumSpecials";
 import PopularBaskets from "../Components/Home/PopularBaskets/PopularBaskets";
 import { fetchSymbols } from "../Redux/symbolReducer/action";
-// import CentrumSpecials from "../Components/Home/CentrumSpecials/CentrumSpecials";
+import LogoutModal from "../Components/Home/Logout/LogoutModal";
 
 export default function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const search = window.location.search;
-  const params = new URLSearchParams(search);
-  const userId = params.get("UserId");
-  const SessionId = params.get("SessionId");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const token = Cookies.get("login_token_client");
 
-  //  Cookies.set("user2Id_client", userId);
   let userDetails = useSelector((store) => store.authReducer.userdata);
   let Allbaskets = useSelector((store) => store.basketReducer);
 
@@ -39,43 +50,37 @@ export default function Home() {
     dispatch(getBalance(token));
   }, [dispatch, token]);
 
-  // useEffect(() => {
-  // if (userId == null && SessionId == null) {
-  //   navigate("/404");
-  //   return;
-  // } else {
-  //   Cookies.set("userId", `${userId}`);
-  //   let SessionID = btoa(SessionId);
-  //   Cookies.set("SessionId", `${SessionID}`);
-  // }
-
-  // make your api calls here
-  // dispatch(getUserInfo(userId));
-  // }, [dispatch, userId, SessionId, navigate]);
-
-  // Use effect to set the cookie when userDetails changes
   useEffect(() => {
     if (userDetails && userDetails.username) {
-      // Store the user's name in a cookie called 'user-name'
-      Cookies.set("user-name", userDetails.username, { expires: 7 }); // Set to expire in 7 days
+      Cookies.set("user-name", userDetails.username, { expires: 7 });
       if (userDetails.currentBalance !== undefined) {
         Cookies.set("balance", userDetails.currentBalance);
       } else {
         Cookies.set("balance", 10000);
       }
     }
-  }, [userDetails]); //
+  }, [userDetails]);
 
-  // Define the character limit for the first name display
   const MAX_NAME_LENGTH = 10;
-
-  const firstName = userDetails?.username?.split(" ")[0] || ""; // Extract the first name
+  const firstName = userDetails?.username?.split(" ")[0] || "";
   const truncatedName =
     firstName.length > MAX_NAME_LENGTH
       ? `${firstName.slice(0, MAX_NAME_LENGTH)}...`
-      : firstName; // Truncate if longer than the limit
+      : firstName;
 
- 
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    Cookies.remove("login_token_client");
+    Cookies.remove("user-name");
+    Cookies.remove("balance");
+    navigate("/");
+  };
+
+  const getUserInitials = (name) => {
+    const names = name?.split(" ") || [];
+    return names.map((n) => n[0]).join("").toUpperCase();
+  };
+
   return (
     <Box>
       {Object.keys(userDetails).length === 0 ? (
@@ -87,33 +92,50 @@ export default function Home() {
             justifyContent="space-between"
             alignItems="center"
             mb={10}
-         
           >
-            <Box display="flex" alignItems="center" >
-              <Tooltip label={firstName} aria-label="Full name tooltip">
-                <Heading
-                  as="h2"
-                  fontFamily="Helvetica"
-                  fontSize="27px"
-                  lineHeight="30px"
-                  fontWeight="500"
-                  color="white"
-                >
-                  {`Hi, ${truncatedName} !`}
-                </Heading>
+            {/* Profile Section */}
+            <Box display="flex" alignItems="center" gap={4}>
+              <Tooltip label={'Logout'} aria-label="Full name tooltip">
+              <Circle
+  size="40px"
+  bgGradient="linear(to-r, #7caee1, #18416b)"
+  color="white"
+  fontWeight="bold"
+  cursor="pointer"
+  _hover={{
+    bgGradient: "linear(to-r, #18416b, #7caee1)",
+    boxShadow: "0 0 10px #7caee1",
+  }}
+  onClick={onOpen}
+>
+  {getUserInitials(userDetails.username)}
+</Circle>
+
               </Tooltip>
+              <Heading
+                as="h2"
+                fontFamily="Helvetica"
+                fontSize="27px"
+                lineHeight="30px"
+                fontWeight="500"
+                color="white"
+              >
+                {`Hi, ${truncatedName}!`}
+              </Heading>
             </Box>
 
+            {/* Logo */}
             <Box
               width="40%"
               display="flex"
               justifyContent="center"
               alignItems="center"
             >
-              <Image src={Logo} alt="Logo" />
+              <img src={Logo} alt="Logo" />
             </Box>
           </Box>
 
+          {/* Components */}
           <AccountOverview userInfo={userDetails} />
           <MyBaskets userInfo={userDetails} />
           <CentrumSpecials
@@ -123,6 +145,14 @@ export default function Home() {
           <PopularBaskets
             allBasketsApiLoading={allBasketsApiLoading}
             allBaskets={allBaskets}
+          />
+
+          {/* Logout Modal */}
+          <LogoutModal
+            isOpen={isOpen}
+            onClose={onClose}
+            handleLogout={handleLogout}
+            isLoggingOut={isLoggingOut}
           />
         </Box>
       )}

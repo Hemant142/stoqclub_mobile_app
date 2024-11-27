@@ -17,7 +17,7 @@ const MyBaskets = ({ userInfo }) => {
   if (userInfo.currentHoldings.length === 0) {
     return null; // Return null if the user is a first-time client
   }
- console.log(userInfo,"userInfo")
+
   return (
     <section className="my-baskets" bg="darkBackground" alignItems={"left"}>
       <Heading   as="h4"

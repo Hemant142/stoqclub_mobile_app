@@ -34,6 +34,7 @@ import {
   getOrderHistory,
   OrderPlaced,
 } from "../Redux/basketReducer/action";
+import axios from "axios";
 
 const ConfirmOrder = () => {
   const location = useLocation();
@@ -97,6 +98,63 @@ navigate(`/basket/${id}`)
       return () => clearInterval(timerId);
     }
   }, [token,toast]);
+
+  // Calculate brokerage and other charges
+  const calculateCharges = async () => {
+    if (!newInstrumentsData || newInstrumentsData.length === 0) return;
+  
+    try {
+      const promises = newInstrumentsData.map((instrument) => {
+        const data = {
+          userId,
+          exchange: 'NSE_EQ',
+          tradingSymbol: instrument.tradingSymbol,
+          qty: instrument.quantity * lots,
+          price: instrument.currentPrice,
+          product: 'delivery',
+          transType: 'buy',
+        };
+  
+        // Use relative path since proxy is set up
+        return axios.post(
+          '/Advance/Brokerage/GetBrokerage',
+          data,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      });
+  
+      const responses = await Promise.all(promises);
+      let totalBrokerage = 0;
+      let totalOtherCharges = 0;
+  
+
+  
+      responses.forEach((res) => {
+        totalBrokerage += res.data.brokerage;
+        totalOtherCharges += res.data.otherCharges;
+      });
+  
+      setBrokerage(totalBrokerage);
+      setOtherCharges(totalOtherCharges);
+    } catch (error) {
+      console.error('Error calculating charges:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to calculate brokerage and charges.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+  
+
+  useEffect(() => {
+    calculateCharges();
+  }, [newInstrumentsData]);
+
 
   // Format time as MM:SS
   const formatTime = (seconds) => {

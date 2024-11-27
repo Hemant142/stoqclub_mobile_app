@@ -269,6 +269,7 @@ export default function BasketDetails() {
   }, []);
 
   const calculateFundREquired = (instrumentListData) => {
+
     const qty = instrumentListData.quantity;
     const cmp = instrumentListData.currentPrice;
     const fundRequired = cmp * qty;
@@ -300,6 +301,7 @@ export default function BasketDetails() {
 
     return Number(upsidePotential);
   };
+
 
   return (
     <Box>
@@ -359,12 +361,17 @@ export default function BasketDetails() {
               {/* )} */}
 
               <LineGraph
-  lineChartData={(basketCalculation.basketValue || []).slice().reverse()}
-  underlyingIndexLineChart={(basketCalculation.underlineValue || []).slice().reverse()}
-  sixMonthsReturns={basketCalculation.sixMonthsReturns || 0}
-  underlyingIndex={basketData.underlyingIndex || ""}
-/>
-
+                lineChartData={(basketCalculation.basketValue || [])
+                  .slice()
+                  .reverse()}
+                underlyingIndexLineChart={(
+                  basketCalculation.underlineValue || []
+                )
+                  .slice()
+                  .reverse()}
+                sixMonthsReturns={basketCalculation.sixMonthsReturns || 0}
+                underlyingIndex={basketData.underlyingIndex || ""}
+              />
 
               <InvestmentInfo basketData={basketData} />
 
