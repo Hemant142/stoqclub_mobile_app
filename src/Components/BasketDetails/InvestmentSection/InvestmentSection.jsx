@@ -33,8 +33,8 @@ const InvestmentSection = (props) => {
   const dispatch = useDispatch();
 
   const minReqAmt = parseFloat(props.minReq);
-  // const currentBalance = parseFloat(props.currentBalance);
-  const currentBalance=6000
+  const currentBalance = parseFloat(props.currentBalance);
+  // const currentBalance=6000
   const instrumentList = props.instrumentList; // Keep instrumentList as an array, no need to parse it
   const upsidePotential = parseFloat(props.upsidePotential);
   const basketId = props.basketId;
