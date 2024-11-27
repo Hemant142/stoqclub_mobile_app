@@ -92,7 +92,7 @@ const LineGraph = ({ lineChartData, underlyingIndexLineChart, underlyingIndex,si
       >
         In the last 6 months, the <span style={{ color: "#1DD75B" }}>Basket</span>{" "}
         outperformed the <span style={{ color: "#ED7D2D" }}>{underlyingIndex}</span>{" "}
-        Index by <span style={{ color: sixMonthsReturns>0?"#1DD75B": "#E77E7E" }}>{sixMonthsReturns}%</span>
+        Index by <span style={{ color: sixMonthsReturns>0?"#1DD75B": "" }}>{sixMonthsReturns}%</span>
       </Text>
       <Divider
         ml={2}
