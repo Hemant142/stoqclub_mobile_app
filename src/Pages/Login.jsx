@@ -69,6 +69,36 @@ const Login = () => {
   }, [lockoutTimer]);
 
   const handleLogin = () => {
+    if (!userId || !panCard) {
+      toast({
+        title: "Please fill in all fields.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+  
+    if (panCard.length < 10) {
+      toast({
+        title: "PAN Card should have at least 10 characters.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+  
+    if (panCard.length > 10) {
+      toast({
+        title: "PAN Card can have at most 10 characters.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (userId && panCard) {
       const data = {
         userId: userId,
@@ -78,7 +108,7 @@ const Login = () => {
       // Dispatch action and handle the promise
       dispatch(clientToken(data))
         .then((res) => {
-       
+     
      Cookies.set('userId',userId)
             // setIsOTPDrawerOpen(true); // Open OTP drawer if login is successful
             if(res.data.status==="failed"){
