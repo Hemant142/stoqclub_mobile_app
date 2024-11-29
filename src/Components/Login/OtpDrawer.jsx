@@ -66,7 +66,9 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
 
       if (response.data.status === "success") {
         const { verifiedAccessToken, centrumId, username } = response.data.data;
-
+        localStorage.removeItem('attemps')
+        localStorage.removeItem('lockoutTimer')
+        
         Cookies.set("login_token_client", verifiedAccessToken);
         Cookies.set("userId_client", centrumId);
         Cookies.set("username_client", username);
