@@ -56,8 +56,9 @@ const OTPDrawer = ({ isOpen, onClose, onFailure, onSuccess, attempts, authToken 
         duration: 2000,
         isClosable: true,
       });
-      return;
       
+      return;
+
     }
 
     setIsSubmitting(true);
